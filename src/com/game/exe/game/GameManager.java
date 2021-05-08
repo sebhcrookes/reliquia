@@ -119,13 +119,6 @@ public class GameManager extends AbstractGame implements Serializable {
         updater.update(gc,this,dt);
         particles.update(gc, this, dt);
 
-        if(gc.getInput().isKeyDown(KeyEvent.VK_C) && controls.allowControls) {
-            try {
-                File outputfile = new File("saved.png");
-                ImageIO.write(gc.getWindow().getImage(), "png", outputfile);
-            }catch(Exception e) {}
-        }
-
         if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
             bgParticle = 0;
 
