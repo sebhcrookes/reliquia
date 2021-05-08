@@ -32,7 +32,7 @@ public class GameManager extends AbstractGame implements Serializable {
     public Player player;
     public Camera camera = new Camera(this,"player");
     public Inventory inventory;
-    public UI ui = new UI(this);;
+    public UI ui = new UI(this);
     public Blocks blocks = new Blocks();
     public Entities entities;
     public Random random = new Random();
@@ -40,7 +40,6 @@ public class GameManager extends AbstractGame implements Serializable {
     public Controls controls = new Controls();
     public Backgrounds backgrounds = new Backgrounds(this);
     public Particles particles = new Particles(this);
-    public Command command = new Command(this);
 
     public GameContainer gc;
 

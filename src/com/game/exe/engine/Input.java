@@ -1,7 +1,5 @@
 package com.game.exe.engine;
 
-import com.game.exe.engine.GameContainer;
-
 import java.awt.event.*;
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
@@ -67,7 +65,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
     @Override
     public void keyPressed(KeyEvent e) {
         keys[e.getKeyCode()] = true;
-        gc.getLogger().log(gc.getLogger().INFO, String.valueOf(e.getKeyChar()));
     }
 
     @Override
