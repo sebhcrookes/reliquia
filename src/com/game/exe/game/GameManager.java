@@ -113,8 +113,7 @@ public class GameManager extends AbstractGame implements Serializable {
     @Override
     public void update(GameContainer gc, float dt) {
 
-        System.out.println(gc.getUtilities().getUsedMemory());
-
+        //This is the update function
         ui.update(this,gc);
         updater.update(gc,this,dt);
         particles.update(gc, this, dt);
