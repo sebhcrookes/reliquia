@@ -155,12 +155,6 @@ public class Renderer {
     }
 
     public void drawImageTile(ImageTile image, int offX, int offY, int tileX, int tileY, GameManager gm) {
-        //Don't render code
-        if(offX < -gm.getLevelW()) return;
-        if(offY < -gm.getLevelH()) return;
-        if(offX <= gm.getLevelW()) return;
-        if(offY <= gm.getLevelH()) return;
-
         int newX = 0;
         int newY = 0;
         int newWidth = image.getTileW();

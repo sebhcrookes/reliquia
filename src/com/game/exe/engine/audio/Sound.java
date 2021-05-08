@@ -13,9 +13,12 @@ public class Sound {
 
     public void play()
     {
-        System.out.println("Played");
         soundClip.setMicrosecondPosition(0);
         soundClip.start();
+    }
+
+    public void stop() {
+        soundClip.stop();
     }
 
     void setLoop(int num) {

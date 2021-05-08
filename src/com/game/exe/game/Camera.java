@@ -43,8 +43,8 @@ public class Camera {
 
         if(offX < 0) offX = 0;
         if(offY < 0) offY = 0;
-        if(offX + gc.getWidth() > gm.getLevelW() * gm.TS) offX = gm.getLevelW() * gm.TS - gc.getWidth();
-        if(offY + gc.getHeight() > gm.getLevelH() * gm.TS) offY = gm.getLevelH() * gm.TS - gc.getHeight();
+        if(offX + gc.getWidth() > gm.lm.getLevelW() * gm.TS) offX = gm.lm.getLevelW() * gm.TS - gc.getWidth();
+        if(offY + gc.getHeight() > gm.lm.getLevelH() * gm.TS) offY = gm.lm.getLevelH() * gm.TS - gc.getHeight();
 
         offY = offY - ((gc.getWidth() / 16) / 5);
     }

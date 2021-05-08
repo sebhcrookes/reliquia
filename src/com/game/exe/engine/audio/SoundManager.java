@@ -13,9 +13,7 @@ public class SoundManager {
         backgroundSound = SoundController.getSoundFromURL("/assets/sfx/jump.wav");
     }
 
-    public void init() {
-
-    }
+    public void init() {}
 
     public void createSound(String soundName, String path) {
         for(int i = 0; i < sounds.length; i++) {
@@ -28,8 +26,8 @@ public class SoundManager {
 
     public void playSound(String soundName) {
         for(int i = 0; i < sounds.length; i++) {
-            System.out.println(sounds[i].soundName);
             if(sounds[i].soundName == soundName) {
+                sounds[i].sound.stop();
                 sounds[i].sound.play();
                 return;
             }
@@ -39,7 +37,8 @@ public class SoundManager {
     public void stopSound(String soundName) {
         for(int i = 0; i < sounds.length; i++) {
             if(sounds[i].soundName == soundName) {
-                sounds[i].sound.play();
+                sounds[i].sound.stop();
+                return;
             }
         }
     }
@@ -48,6 +47,7 @@ public class SoundManager {
         for(int i = 0; i < sounds.length; i++) {
             if(sounds[i].soundName == soundName) {
                 sounds[i].sound.setLoop();
+                return;
             }
         }
     }
@@ -56,6 +56,7 @@ public class SoundManager {
         for(int i = 0; i < sounds.length; i++) {
             if(sounds[i].soundName == soundName) {
                 sounds[i].sound.setLoop(num);
+                return;
             }
         }
     }
