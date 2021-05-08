@@ -3,6 +3,7 @@ package com.game.exe.game;
 import com.game.exe.engine.AbstractGame;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
+import com.game.exe.engine.audio.SoundManager;
 import com.game.exe.game.background.Backgrounds;
 import com.game.exe.game.blocks.*;
 import com.game.exe.game.entities.Entities;
@@ -40,6 +41,7 @@ public class GameManager extends AbstractGame implements Serializable {
     public Controls controls = new Controls();
     public Backgrounds backgrounds = new Backgrounds(this);
     public Particles particles = new Particles(this);
+    public SoundManager sm = new SoundManager();
 
     public GameContainer gc;
 
@@ -64,6 +66,11 @@ public class GameManager extends AbstractGame implements Serializable {
 
 
     public GameManager(){
+
+        sm.init();
+        sm.createSound("playerJump", "/assets/sfx/jump.wav");
+        sm.createSound("playerDash", "/assets/sfx/dash.wav");
+        sm.createSound("bottleSmash", "/assets/sfx/bottlesmash.wav");
 
         boolean loadingSucceeded = false;
         entities = new Entities(this);

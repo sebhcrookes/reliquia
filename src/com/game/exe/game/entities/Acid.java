@@ -45,7 +45,7 @@ public class Acid extends GameObject implements Serializable {
 
         if(gm.getCollision(tileX,tileY)) {
             this.dead = true;
-            gm.player.sound.explodeSound.play();
+            gm.sm.playSound("bottleSmash");
         }
     }
 
