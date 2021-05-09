@@ -32,6 +32,8 @@ public class Player extends GameObject {
 
     public int dashTime = 0;
     private boolean isDash = false;
+    private final float DASH = 0.3f;
+    private float dashCooldown;
 
     public Player(float posX, float posY) {
         this.tag = "player";
@@ -42,10 +44,10 @@ public class Player extends GameObject {
         this.posX = (int)(posX * GameManager.TS);
         this.posY = (int)(posY * GameManager.TS);
         this.isItem = false;
+        this.dashCooldown = this.DASH;
 
         int speed = 100;
         physics.init(speed);
-
     }
 
     @Override
@@ -123,19 +125,26 @@ public class Player extends GameObject {
             isMovingR = false;
         }
         //endregion
-        //region Dash  Movement
-        if(gc.getInput().isKeyDown(KeyEvent.VK_SHIFT) && gm.controls.allowControls) {
-            if(!isDash) {
+        //region Dash Movement
+        if(gc.getInput().isKey(KeyEvent.VK_SHIFT) && gm.controls.allowControls) {
+            if(!isDash && dashCooldown == DASH) {
                 dashTime = 10;
                 currentSpeed += SPEED * 2;
                 isDash = true;
             }
         }
 
+        if(isDash || dashCooldown != DASH) {
+            if(dashCooldown <= 0.0f)
+                dashCooldown = DASH;
+            else
+                dashCooldown -= 0.01f;
+        }
+
         if(dashTime > 0) {
             dashTime--;
             if (dashTime % 4 == 0) {
-                gm.particles.createParticle("player", posX, posY, 40);
+                gm.particles.createParticle("player", posX, posY);
             }
         }
         if(dashTime == 0) {
@@ -147,12 +156,12 @@ public class Player extends GameObject {
         }
         //endregion
         //region Jump
-        if(gc.getInput().isKeyDown(gm.controls.jump) || gc.getInput().isKeyDown(gm.controls.alternateJump)) {
+        if(gc.getInput().isKey(gm.controls.jump) || gc.getInput().isKey(gm.controls.alternateJump)) {
             if(physics.grounded && gm.controls.allowControls) {
                 if(!isSubmerged) {
                     sound.jumpSound.play();
                 }
-                gm.particles.createParticle("dust", posX + (playerImage.getW() >> 1), posY + playerImage.getH() - 3, 50);
+                gm.particles.createParticle("dust", posX + (playerImage.getW() >> 1), posY + playerImage.getH() - 3);
                 physics.fallDistance = -physics.getJumpPower();
                 physics.grounded = false;
             }

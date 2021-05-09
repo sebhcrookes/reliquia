@@ -25,7 +25,6 @@ public class LevelLoader {
 
         //Loading properties file for this level
         levelP = new PropertiesFile(basePath + "map" + levelNumber + ".prop");
-        System.out.println(basePath + "map" + levelNumber + ".prop");
 
         //Setting the weather for this level
         updateWeather();
@@ -118,7 +117,6 @@ public class LevelLoader {
             gm.player.setLocation(gm.spawnX, gm.spawnY);
             gm.levelNumber--;
             load(gm.levelNumber);
-            e.printStackTrace();
         }
     }
 

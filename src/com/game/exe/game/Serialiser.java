@@ -1,5 +1,7 @@
 package com.game.exe.game;
 
+import com.game.exe.engine.util.Logger;
+
 import java.io.*;
 
 public class Serialiser implements Serializable {
@@ -20,7 +22,7 @@ public class Serialiser implements Serializable {
 
     public void savePlayer(GameManager gm) throws Exception {
         try{
-            log("Saving Player...");
+            Logger.log(Logger.INFO, "Saving player");
 
             Object[] playerData = new Object[10];
 
@@ -40,19 +42,20 @@ public class Serialiser implements Serializable {
             itemOut.writeObject(playerData);
             itemOut.flush();
             itemOut.close();
-        } catch (Exception e) {}
+        } catch (Exception e) { Logger.log(Logger.ERROR, "Failed to save player"); }
     }
 
     public String[] loadPlayer(GameManager gm) {
-        log("Loading Player...");
+        Logger.log(Logger.INFO, "Loading player");
 
-        Object[] playerData = new Object[8];
-        String[] playerDataString = new String[8];
+        Object[] playerData = new Object[9];
+        String[] playerDataString;
 
         try {
             FileInputStream fi = new FileInputStream(new File(".game.exe/player/player" + fileEnding));
             ObjectInputStream oi = new ObjectInputStream(fi);
             playerData = (Object[]) oi.readObject();
+            playerDataString = new String[playerData.length];
 
             for(int i = 0; i < playerData.length; i++) {
                 playerDataString[i] = String.valueOf(playerData[i]);
@@ -60,15 +63,16 @@ public class Serialiser implements Serializable {
 
             fi.close();
             oi.close();
-        }catch(Exception e) {}
+        }catch(Exception e) { Logger.log(Logger.ERROR, "Failed to load player"); }
 
+        playerDataString = new String[10];
         return playerDataString;
     }
 
     public void saveInventory(GameManager gm) {
         try{
 
-            log("Saving Inventory...");
+            Logger.log(Logger.INFO, "Saving inventory");
 
             Object[] inventoryData = new Object[2];
 
@@ -80,13 +84,13 @@ public class Serialiser implements Serializable {
             itemOut.writeObject(inventoryData);
             itemOut.flush();
             itemOut.close();
-        }catch(Exception e) {}
+        }catch(Exception e) { Logger.log(Logger.ERROR, "Failed to save inventory"); }
     }
 
     public void loadInventory(GameManager gm) {
         try{
 
-            log("Loading Inventory...");
+            Logger.log(Logger.INFO, "Loading inventory");
 
             Object[] inventoryData;
 
@@ -98,15 +102,6 @@ public class Serialiser implements Serializable {
 
             gm.inventory.items = (String[])inventoryData[0];
             gm.inventory.itemCount = (int[])inventoryData[1];
-        }catch(Exception e) {}
-    }
-
-
-    private void log(String output) {
-        if(output.contains("ERROR")) {
-            System.out.println(output);
-        }else {
-            System.out.println("Serialiser: " + output);
-        }
+        }catch(Exception e) { Logger.log(Logger.ERROR, "Failed to load inventory"); }
     }
 }

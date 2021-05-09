@@ -2,6 +2,7 @@ package com.game.exe.game.particles;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
+import com.game.exe.engine.util.Logger;
 import com.game.exe.game.GameManager;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.engine.gfx.Image;
@@ -12,6 +13,8 @@ public class Particle extends GameObject {
 
     private float posX;
     private float posY;
+
+    private int component;
 
     private Image image;
     private int existenceTime;
@@ -36,10 +39,19 @@ public class Particle extends GameObject {
         this.fallSpeed = fallSpeed;
     }
 
+    public Particle(float posX, float posY, String imagePath, int existenceTime, int decayType, int fallSpeed, int component) {
+        this.posX = posX;
+        this.posY = posY;
+        this.image = new Image(imagePath);
+        this.existenceTime = existenceTime;
+        this.decayType = decayType;
+        this.fallSpeed = fallSpeed;
+        this.component = component;
+    }
+
     @Override
     public void update(GameContainer gc, GameManager gm, float dt) {
         existenceTime--; //Subtract from existenceTime
-
         posY+=fallSpeed; //Fall
 
         switch(decayType) {
@@ -64,6 +76,19 @@ public class Particle extends GameObject {
                     this.setDead(true);
                 }
                 break;
+        }
+
+        switch(component) {
+            case Particles.WIND_LIGHT:
+                if(gm.random.generate(1,4) == 2)
+                    posX--;
+                return;
+            case Particles.WIND_MEDIUM:
+                posX--;
+                return;
+            case Particles.WIND_STRONG:
+                posX-=2;
+                return;
         }
     }
 

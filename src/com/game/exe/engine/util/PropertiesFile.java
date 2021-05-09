@@ -25,7 +25,7 @@ public class PropertiesFile {
             String content = stringBuilder.toString();
 
             this.splitContent = content.split("=");
-        }catch(Exception e) { e.printStackTrace(); }
+        }catch(Exception e) { Logger.log(Logger.ERROR, "Failed to load properties file"); }
     }
 
     public String get(String key) {

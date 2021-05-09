@@ -38,7 +38,6 @@ public class BlockUpdate implements Serializable {
 
         if(playerBlock == "water" || playerBlock == "watersurface") {
             gm.player.setUnderwater(true);
-            System.out.println("Is Underwater!");
         }else{
             gm.player.setUnderwater(false);
         }
