@@ -2,6 +2,7 @@ package com.game.exe.game.level;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.game.GameManager;
+import com.game.exe.game.particles.Particles;
 
 public class LevelWeather {
 
@@ -20,7 +21,6 @@ public class LevelWeather {
     }
 
     public void set(int weatherType) {
-        System.out.println(weatherType);
         switch(weatherType) {
             case RAIN:
                 this.weatherType = "rain";
@@ -40,7 +40,7 @@ public class LevelWeather {
         if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
             bgParticle = 0;
 
-            gm.particles.createParticle(weatherType,gm.random.generate((int)gm.camera.getOffX(), (int)gm.camera.getOffX() + gc.getWidth()), gm.camera.getOffY(), gm.particles.AUTOMATIC);
+            gm.particles.createParticle(weatherType,gm.random.generate((int)gm.camera.getOffX(), (int)gm.camera.getOffX() + gc.getWidth()), gm.camera.getOffY(), Particles.WIND_STRONG);
         }
         bgParticle++;
     }

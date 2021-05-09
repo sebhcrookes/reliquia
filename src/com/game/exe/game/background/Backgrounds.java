@@ -33,7 +33,6 @@ public class Backgrounds {
         try {
             trees[treeCount] = new Tree(x, y - (tree.getH() / gm.TS));
             treeCount++;
-            System.out.println(treeCount);
         }catch(Exception e) {}
     }
 

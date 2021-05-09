@@ -9,6 +9,7 @@ import com.game.exe.engine.gfx.ImageTile;
 
 import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -45,9 +46,7 @@ public class Renderer {
     }
 
     public void clear() {
-        for (int i = 0; i < p.length; i++) {
-            p[i] = gm.AIR_COLOUR;
-        }
+        Arrays.fill(p, GameManager.AIR_COLOUR);
     }
 
     public void process() {
@@ -196,7 +195,6 @@ public class Renderer {
 
 
     public void drawFillRect(int offX, int offY, int width, int height, int colour) {
-
         for (int y = 0; y <= height; y++) {
             for (int x = 0; x <= width; x++) {
                 setPixel(x + offX, y + offY, colour);
