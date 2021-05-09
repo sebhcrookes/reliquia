@@ -2,17 +2,17 @@ package com.game.exe.engine;
 
 public class EngineSettings {
 
-    private String title = "game.exe";
-    private int width = 512;
-    private int height = 288;
-    private float scale = 2.0f;
-    private double updateCap = 1.0 / 60.0;
-    private boolean debug = false;
-    private boolean lockFPS = false;
+    private static String title = "game.exe";
+    private static int width = 512;
+    private static int height = 288;
+    private static float scale = 2.0f;
+    private static double updateCap = 1.0 / 60.0;
+    private static boolean debug = false;
+    private static boolean lockFPS = false;
 
     public EngineSettings() {}
 
-    public String getTitle() {
+    public static String getTitle() {
         return title;
     }
 
