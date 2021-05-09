@@ -47,7 +47,7 @@ public class BlockUpdate implements Serializable {
         if (playerBlock == gm.getBlockIDFromNumber(7)) {
             if((gm.levelAmount - 1) > gm.levelNumber) {
                 gm.levelNumber++;
-                gm.lm.getLevelLoader().load(gm.levelNumber);
+                gm.loadLevel(gm.levelNumber);
                 gm.player.setLocation(gm.spawnX, gm.spawnY);
             }
         }

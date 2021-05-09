@@ -70,21 +70,21 @@ public class GameContainer implements Runnable {
                 unprocessedTime -= settings.getUpdateCap();
                 render = true;
 
-                game.update(this,(float)settings.getUpdateCap());
-                input.update();
-
                 if(frameTime >= 1.0) {
                     frameTime = 0;
                     fps = frames;
                     frames = 0;
                 }
+
+                game.update(this,(float)settings.getUpdateCap());
+                window.update();
+                input.update();
             }
 
             if(render) {
                 frames++;
                 renderer.clear();
                 game.render(this,renderer);
-                window.update();
                 renderer.process();
             }else{
                 try {

@@ -20,6 +20,7 @@ public class Player extends GameObject {
     private boolean isMovingR = false;
     private boolean isMovingL = false;
 
+    public Sound sound = new Sound();
     private Physics physics = new Physics();
 
     public String colour = "green";
@@ -124,7 +125,6 @@ public class Player extends GameObject {
         //endregion
         //region Dash  Movement
         if(gc.getInput().isKeyDown(KeyEvent.VK_SHIFT) && gm.controls.allowControls) {
-            gm.sm.playSound("playerDash");
             if(!isDash) {
                 dashTime = 10;
                 currentSpeed += SPEED * 2;
@@ -150,7 +150,7 @@ public class Player extends GameObject {
         if(gc.getInput().isKeyDown(gm.controls.jump) || gc.getInput().isKeyDown(gm.controls.alternateJump)) {
             if(physics.grounded && gm.controls.allowControls) {
                 if(!isSubmerged) {
-                    gm.sm.playSound("playerJump");
+                    sound.jumpSound.play();
                 }
                 gm.particles.createParticle("dust", posX + (playerImage.getW() >> 1), posY + playerImage.getH() - 3, 50);
                 physics.fallDistance = -physics.getJumpPower();

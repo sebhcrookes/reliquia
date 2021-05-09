@@ -54,7 +54,7 @@ public class Inventory implements Serializable{
                 if(gm.player.facing == "right") { direction = 4; }
                 if(gm.player.facing == "left") { direction = -4; }
                 gm.entities.summonItem(item, gm.player.tileX, gm.player.tileY, direction, -2);
-                //TODO: gm.player.sound.dropSound.play();
+                gm.player.sound.dropSound.play();
                 removeItem(items[selectedSlot - 1], 1);
 
             }
@@ -125,7 +125,7 @@ public class Inventory implements Serializable{
                         continue;
                     } else {
                         itemCount[i]++;
-                        //TODO: gm.player.sound.pickupSound.play();
+                        gm.player.sound.pickupSound.play();
                         return;
                     }
                 }
@@ -136,7 +136,7 @@ public class Inventory implements Serializable{
                 }else {
                     items[i] = item;
                     itemCount[i]++;
-                    //TODO: gm.player.sound.pickupSound.play();
+                    gm.player.sound.pickupSound.play();
                     return;
                 }
             }

@@ -3,14 +3,11 @@ package com.game.exe.game;
 import com.game.exe.engine.AbstractGame;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.engine.audio.SoundManager;
-import com.game.exe.engine.util.PropertiesFile;
 import com.game.exe.game.background.Backgrounds;
 import com.game.exe.game.blocks.*;
 import com.game.exe.game.entities.Entities;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.game.entities.Player;
-import com.game.exe.game.level.LevelManager;
 import com.game.exe.game.particles.Particles;
 import com.game.exe.engine.gfx.Image;
 
@@ -26,11 +23,9 @@ public class GameManager extends AbstractGame implements Serializable {
 
     public static final int TS = 16;
     public static final int AIR_COLOUR = 0xff92f4ff;
-    private String[] collision;
 
     public ArrayList<GameObject> objects = new ArrayList<GameObject>();
-
-    public GameContainer gc;
+    private String[] collision;
 
     public Sprite sprite = new Sprite();
     public Serialiser serialiser = new Serialiser(this);
@@ -45,12 +40,18 @@ public class GameManager extends AbstractGame implements Serializable {
     public Controls controls = new Controls();
     public Backgrounds backgrounds = new Backgrounds(this);
     public Particles particles = new Particles(this);
-    public SoundManager sm = new SoundManager();
-    public LevelManager lm = new LevelManager(this.gc, this);
+
+    public GameContainer gc;
 
     public int levelAmount = 2;
+    private int levelW, levelH;
     public int levelNumber = 0;
+    public String mapBasePath = "/assets/maps/";
     public int spawnX, spawnY;
+
+    private int bgParticle = 0;
+    private int weatherIntensity = 0;
+    private String weatherType = "clear";
 
     public int sizeX = 512; //500
     public int sizeY = 288; //375
@@ -63,10 +64,6 @@ public class GameManager extends AbstractGame implements Serializable {
 
 
     public GameManager(){
-        sm.init();
-        sm.createSound("playerJump", "/assets/sfx/jump.wav");
-        sm.createSound("playerDash", "/assets/sfx/dash.wav");
-        sm.createSound("bottleSmash", "/assets/sfx/bottlesmash.wav");
 
         boolean loadingSucceeded = false;
         entities = new Entities(this);
@@ -95,8 +92,7 @@ public class GameManager extends AbstractGame implements Serializable {
         objects.add(player);
         blocks.initialise();
         entities.summonMob(this,"beth", player.tileX, player.tileY);
-        lm.getLevelLoader().load(this.levelNumber);
-
+        loadLevel(this.levelNumber);
         if(!loadingSucceeded) {
             player.setLocation(spawnX, spawnY);
         }
@@ -116,10 +112,17 @@ public class GameManager extends AbstractGame implements Serializable {
     @Override
     public void update(GameContainer gc, float dt) {
 
+        //This is the update function
         ui.update(this,gc);
         updater.update(gc,this,dt);
         particles.update(gc, this, dt);
-        lm.update(gc,dt);
+
+        if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
+            bgParticle = 0;
+
+            particles.createParticle(weatherType,random.generate((int)camera.getOffX(), (int)camera.getOffX() + gc.getWidth()), camera.getOffY(), particles.AUTOMATIC);
+        }
+        bgParticle++;
 
         if(gc.getInput().isKeyDown(KeyEvent.VK_F)) {
             toggleBars();
@@ -146,6 +149,8 @@ public class GameManager extends AbstractGame implements Serializable {
         camera.update(gc, this, dt);
     }
 
+    public Image image = new Image("/assets/light.png");
+
     @Override
     public void render(GameContainer gc, Renderer r) {
 
@@ -153,8 +158,8 @@ public class GameManager extends AbstractGame implements Serializable {
         backgrounds.render(gc, r);
         particles.render(gc, r);
 
-        for(int y = 0; y < lm.getLevelH(); y++) {
-            for (int x = 0; x < lm.getLevelW(); x++) {
+        for(int y = 0; y < levelH; y++) {
+            for (int x = 0; x < levelW; x++) {
 
                 //Checking if block is off screen
                 if (x * TS > gc.getWidth() + camera.getOffX()) continue;
@@ -162,7 +167,7 @@ public class GameManager extends AbstractGame implements Serializable {
                 if (x * TS < -TS + camera.getOffX()) continue;
                 if (y * TS < -TS + camera.getOffY()) continue;
 
-                int pos = x + y * lm.getLevelW();
+                int pos = x + y * levelW;
                 for (int i = 0; i < blocks.blockList.size(); i++) {
                     if (collision[pos] == blocks.blockList.get(i).blockID && blocks.blockList.get(i).blockID != "air") {
 
@@ -193,6 +198,99 @@ public class GameManager extends AbstractGame implements Serializable {
         }
     }
 
+    public void loadLevel(int levelNumber) {
+        String basePath = mapBasePath;
+        String fileLocation = basePath + "map" + levelNumber + ".png";
+        Image levelImage;
+
+        int treeCount = 0;
+
+        try {
+            levelImage = new Image(fileLocation);
+            levelW = levelImage.getW();
+            levelH = levelImage.getH();
+            collision = new String[levelW * levelH];
+            for (int y = 0; y < levelImage.getH(); y++) {
+                for (int x = 0; x < levelImage.getW(); x++) {
+                    int currentBlock = x + y * levelImage.getW();
+
+                    for (int i = 0; i < blocks.blockList.size(); i++) {
+                        if (levelImage.getP()[currentBlock] == blocks.blockList.get(i).colourCode) {
+                            collision[currentBlock] = blocks.blockList.get(i).blockID;
+                        }
+                    }
+                    if (levelImage.getP()[currentBlock] == 0xffffff00) {
+                        this.spawnX = x;
+                        this.spawnY = y;
+                    }
+                    //Adding tops to bamboo
+                    if(collision[currentBlock] == "bamboostem") {
+                        if(collision[currentBlock - levelImage.getW()] == "air") {
+                            collision[currentBlock] = "bambooshoot";
+                        }
+                    }
+                    //Water
+                    if(collision[currentBlock] == "water") {
+                        if(collision[currentBlock - levelImage.getW()] == "air") {
+                            collision[currentBlock] = "watersurface";
+                        }
+                    }
+
+                    //region Grass Block
+                    if(getCollisionFromID(collision[currentBlock]) && collision[currentBlock - 1] == "grassblockright") {
+                        collision[currentBlock - 1] = "grassblock";
+                    }
+                    if(collision[currentBlock] == "grassblock") {
+                        for(int n = 0; n < blocks.blockList.size(); n++) {
+                            if(blocks.blockList.get(n).blockID == collision[currentBlock-1]) {
+                                if(!blocks.blockList.get(n).doesCollide) {
+                                    collision[currentBlock] = "grassblockleft";
+                                }
+                            }
+                        }
+                        if(collision[currentBlock] != "grassblockleft") {
+                            collision[currentBlock] = "grassblockright";
+                        }
+                    }
+
+                    if(collision[currentBlock] == "dirtblock") {
+                        if(collision[currentBlock - 1] == "grassblockright") {
+                            collision[currentBlock - 1] = "grassblock";
+                        }
+                    }
+                    //endregion
+
+                    //Tree Generation
+                    if(getBlockNumberFromID(collision[currentBlock]) == 1 && !getCollisionFromID(collision[currentBlock - this.levelW])) {
+                        if(getBlockNumberFromID(collision[currentBlock - 1]) == 1 && !getCollisionFromID(collision[currentBlock - (this.levelW - 1)])) {
+                            if(getBlockNumberFromID(collision[currentBlock - 2]) == 1 && !getCollisionFromID(collision[currentBlock - (this.levelW - 2)])) {
+                                if(getBlockNumberFromID(collision[currentBlock - 3]) == 1 && !getCollisionFromID(collision[currentBlock - (this.levelW - 3)])) {
+                                    if(getBlockNumberFromID(collision[currentBlock - 4]) == 1 && !getCollisionFromID(collision[currentBlock - (this.levelW - 4)])) {
+                                        if(getBlockNumberFromID(collision[currentBlock - 5]) == 1 && !getCollisionFromID(collision[currentBlock - (this.levelW - 5)])) {
+                                            if(getBlockNumberFromID(collision[currentBlock - 6]) == 1 && !getCollisionFromID(collision[currentBlock - (this.levelW - 6)])) {
+                                                if(treeCount < 2) {
+                                                    backgrounds.createTree(x - 6, y);
+                                                    treeCount++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }catch(Exception e) {
+            player.setLocation(spawnX, spawnY);
+            this.levelNumber--;
+            loadLevel(this.levelNumber);
+        }
+    }
+
+
+
     public void addObject(GameObject object) {
         objects.add(object);
     }
@@ -207,9 +305,9 @@ public class GameManager extends AbstractGame implements Serializable {
     }
 
     public boolean getCollision(int x, int y) {
-        if (x < 0 || x >= lm.getLevelW() || y < 0 || y >= lm.getLevelH())
+        if (x < 0 || x >= levelW || y < 0 || y >= levelH)
             return true;
-        int blockToTest = x + y * lm.getLevelW();
+        int blockToTest = x + y * levelW;
         if (collision[blockToTest] != getBlockIDFromNumber(0)) {
             for (int i = 0; i < blocks.blockList.size(); i++) {
                 if (blocks.blockList.get(i).blockID == collision[blockToTest]) {
@@ -225,7 +323,7 @@ public class GameManager extends AbstractGame implements Serializable {
     }
 
     public String getCollisionDetails(int x, int y) {
-        int blockToTest = x + y * lm.getLevelW();
+        int blockToTest = x + y * levelW;
         try {
             if (collision[blockToTest] != getBlockIDFromNumber(0)) {
                 for (int i = 0; i < blocks.blockList.size(); i++) {
@@ -239,7 +337,7 @@ public class GameManager extends AbstractGame implements Serializable {
     }
 
     public void setBlock(int x, int y, String blockType) {
-        int blockToSet = x + y * lm.getLevelW();
+        int blockToSet = x + y * levelW;
         try {
             if (collision[blockToSet] != getBlockIDFromNumber(0)) {
                 for (int i = 0; i < blocks.blockList.size(); i++) {
@@ -290,6 +388,24 @@ public class GameManager extends AbstractGame implements Serializable {
         return true;
     }
 
+    public void setWeather(String weatherType) {
+        if(weatherType.equals("rain")) {
+            this.weatherType = weatherType;
+            weatherIntensity = 4;
+            return;
+        }
+        if(weatherType.equals("clear")) {
+            this.weatherType = weatherType;
+            weatherIntensity = 0;
+            return;
+        }
+        if(weatherType.equals("snow")) {
+            this.weatherType = weatherType;
+            weatherIntensity = 4;
+            return;
+        }
+    }
+
     public void toggleBars() {
         if(cinematicMode) {
             cinematicMode = false;
@@ -302,33 +418,15 @@ public class GameManager extends AbstractGame implements Serializable {
         return a-b;
     }
 
-    public int getlevelW() {
-        return lm.getLevelW();
+    public int getLevelW() {
+        return levelW;
     }
 
     public int getLevelH() {
-        return lm.getLevelH();
-    }
-
-    public String[] getCollision() {
-        return this.collision;
-    }
-
-    public void setCollision(String[] collision) {
-        this.collision = collision;
-    }
-
-    public void setCollisionValue(String value, int position) {
-        this.collision[position] = value;
-    }
-
-    public String getCollisionValue(int position) {
-        return this.collision[position];
+        return levelH;
     }
 
     public void setScale(int scale) {
         gc.setScale(scale);
     }
-
-    public LevelManager getLevelManager() { return lm; }
 }

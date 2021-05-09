@@ -154,6 +154,6 @@ public class UI implements Serializable{
 
     private void updateMenuPlayer(GameManager gm) {
         playerImage = new Image("/assets/player/" + gm.player.colour + "/0.png");
-        //TODO: sound.select.play();
+        sound.select.play();
     }
 }

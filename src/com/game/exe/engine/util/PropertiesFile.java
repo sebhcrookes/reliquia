@@ -27,7 +27,7 @@ public class PropertiesFile {
 
             String content = stringBuilder.toString();
 
-            this.splitContent = (String[])content.split("=");
+            this.splitContent = content.split("=");
         }catch(Exception e) { e.printStackTrace(); }
     }
 
