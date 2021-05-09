@@ -10,10 +10,7 @@ public class PropertiesFile {
 
     public PropertiesFile(String path) {
         try {
-            File file;
-            file = new File(getClass().getResource(path).toURI());
-
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path)));
             StringBuilder stringBuilder = new StringBuilder();
             String line = null;
             String ls = "=";
