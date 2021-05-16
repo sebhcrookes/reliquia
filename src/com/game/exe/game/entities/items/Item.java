@@ -44,8 +44,7 @@ public class Item extends GameObject implements Serializable {
         this.fallDistance = velY;
         this.velX = velX;
 
-        this.customData[0][0] = "PickupDelay";
-        this.customData[0][1] = 20;
+        this.customEntityData.setValue("PickupDelay", 20);
     }
 
     @Override
@@ -54,20 +53,16 @@ public class Item extends GameObject implements Serializable {
         tempOffX = (int) offX;
         int tempTileX = tileX;
 
-        for(int i = 0; i < this.customData.length; i++) {
-            if(this.customData[i][0] == "PickupDelay") {
-                int nbtValue = (int)this.customData[i][1];
-                if(nbtValue != 0) {
-                    if(nbtValue - 1 <= 0) {
-                        this.customData[i][0] = null;
-                        this.customData[i][1] = null;
-                    }else {
-                        nbtValue--;
-                        this.customData[i][1] = nbtValue;
-                    }
-                }
+        try {
+            String stringVal = String.valueOf(customEntityData.getValue("PickupDelay"));
+            int intVal = Integer.parseInt(stringVal);
+
+            if (intVal <= 0) {
+                customEntityData.removeValue("PickupDelay"); // Removing PickupDelay
+            } else {
+                this.customEntityData.setValue("PickupDelay", intVal - 1); // Subtracting from PickupDelay
             }
-        }
+        }catch(Exception ignored) {}
 
         if(velX != 0) {
             if(velX < 0) {

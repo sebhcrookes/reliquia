@@ -12,7 +12,7 @@ public abstract class GameObject extends Physics {
     protected int width, height;
     protected boolean dead = false;
     protected boolean isItem = false;
-    public Object[][] customData = new Object[10][2];
+    public CustomEntityData customEntityData = new CustomEntityData();
     public int tileX, tileY;
 
     public abstract void update(GameContainer gc, GameManager gm, float dt);

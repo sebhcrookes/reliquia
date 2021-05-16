@@ -66,15 +66,10 @@ public class Player extends GameObject {
                 if(posX >= objectX - 16 && posX <= objectX + 16) {
                     if(posY >= objectY - 16 && posY <= objectY + 16) {
                         if(gm.inventory.canStore(gm.objects.get(i).tag)) {
-                            for(int n = 0; n < gm.objects.get(i).customData.length; n++) {
-                                try {
-                                    if (gm.objects.get(i).customData[n][0] == "PickupDelay") {
-                                        break entitySearch;
-                                    }
-                                }catch(Exception e) { break entitySearch; }
+                            if(gm.objects.get(i).customEntityData.getValue("PickupDelay") == null) {
+                                gm.objects.get(i).setDead(true);
+                                gm.inventory.pickup(gm.objects.get(i).tag);
                             }
-                            gm.objects.get(i).setDead(true);
-                            gm.inventory.pickup(gm.objects.get(i).tag);
                         }
                     }
                 }
