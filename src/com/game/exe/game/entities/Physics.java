@@ -5,37 +5,47 @@ import com.game.exe.game.GameManager;
 public class Physics {
 
     protected final float JUMP = 4;
-    protected int SPEED = 100;
+    protected final int SPEED = 100;
+    protected int speed = 100;
 
     protected int fallSpeed = 10;
     protected float fallDistance = 0;
     private float jumpPower = 4;
     protected boolean grounded = false;
     private boolean underwater = false;
-    protected float offY;
-    protected float offX;
+    protected float offY = 0;
+    protected float offX = 0;
 
-    protected final float MULTIPLIER = (float)(1.0 / 60.0);
+    private GameObject obj;
+
+    private boolean isInitialised = false;
 
     public Physics() {}
 
-    public void init(int speed) {
-        this.SPEED = speed;
+    public void init(GameObject obj, int speed) {
+        this.speed = speed;
+        this.obj = obj;
+        this.isInitialised = true;
     }
 
     public void apply(GameObject obj, GameManager gm, float dt) {
+        if(!isInitialised) {
+            return;
+        }
+
+        float MULTIPLIER = (float) (1.0 / 60.0);
         fallDistance += MULTIPLIER * fallSpeed;
 
         this.offY += fallDistance;
         if(obj.tag != "acid") { //We don't want to run a grounded check on the acid bottle
             if (fallDistance > 0) {
-                if ((gm.getCollision(obj.tileX, obj.tileY + 1) || gm.getCollision(obj.tileX + (int) Math.signum((int) offX), obj.tileY + 1)) && offY >= 0) {
+                if ((gm.getCollision(obj.tileX, obj.tileY + 1) || gm.getCollision(obj.tileX + (int) Math.signum((int) this.offX), obj.tileY + 1)) && offY >= 0) {
                     fallDistance = 0;
                     offY = 0;
                     grounded = true;
                 }
             } else if (fallDistance < 0) {
-                if ((gm.getCollision(obj.tileX, obj.tileY - 1) || gm.getCollision(obj.tileX + (int) Math.signum((int) offX), obj.tileY - 1)) && offY <= 0) {
+                if ((gm.getCollision(obj.tileX, obj.tileY - 1) || gm.getCollision(obj.tileX + (int) Math.signum((int) this.offX), obj.tileY - 1)) && offY <= 0) {
                     fallDistance = 0;
                     offY = 0;
                 }
@@ -59,11 +69,11 @@ public class Physics {
         }
 
         //X
-        if(offX > gm.TS / 2) {
-            offX -= gm.TS;
+        if(this.offX > gm.TS / 2) {
+            this.offX -= gm.TS;
             obj.tileX++;
-        }else if(offX < -gm.TS / 2) {
-            offX += gm.TS;
+        }else if(this.offX < -gm.TS / 2) {
+            this.offX += gm.TS;
             obj.tileX--;
         }
 
@@ -73,22 +83,6 @@ public class Physics {
 
     public void setGrounded(boolean grounded) {
         this.grounded = grounded;
-    }
-
-    public float getOffY() {
-        return offY;
-    }
-
-    public void setOffY(float offY) {
-        this.offY = offY;
-    }
-
-    public float getOffX() {
-        return offX;
-    }
-
-    public void setOffX(float offX) {
-        this.offX = offX;
     }
 
     public boolean isUnderwater() {
@@ -111,7 +105,7 @@ public class Physics {
         return JUMP;
     }
 
-    public int getSPEED() {
-        return SPEED;
+    public int getSpeed() {
+        return speed;
     }
 }

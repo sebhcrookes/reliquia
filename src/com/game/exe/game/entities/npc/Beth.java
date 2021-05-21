@@ -4,12 +4,9 @@ import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
 import com.game.exe.game.GameManager;
 import com.game.exe.game.entities.GameObject;
-import com.game.exe.game.entities.Physics;
 import com.game.exe.engine.gfx.Image;
 
 public class Beth extends GameObject {
-
-    private Physics physics;
 
     private Image rightImage = new Image("/assets/npc/beth/right.png");
     private Image leftImage = new Image("/assets/npc/beth/left.png");
@@ -17,7 +14,6 @@ public class Beth extends GameObject {
 
     private Image chatLeft = new Image("/assets/ui/chat/left.png");
     private Image chatRight = new Image("/assets/ui/chat/right.png");
-
 
     private GameManager gm;
 
@@ -31,26 +27,25 @@ public class Beth extends GameObject {
 
     public Beth(GameManager gm, float posX, float posY) {
         this.gm = gm;
-        physics = new Physics();
         this.tag = "beth";
         this.posX = posX;
         this.posY = posY;
         this.tileX = (int)posX;
         this.tileY = (int)posY;
-        physics.setOffX(0);
-        physics.setOffY(0);
+        this.setOffX(0);
+        this.setOffY(0);
 
         resultantConversation = "Hello, how are you?";
 
         int speed = 100;
-        physics.init(speed);
+        this.init(this, speed);
 
     }
 
     @Override
     public void update(GameContainer gc, GameManager gm, float dt) {
 
-        physics.apply(this, gm, dt);
+        this.apply(this, gm, dt);
 
         if(gm.player.posX <= this.posX) {
             if(bethImage != leftImage) {

@@ -30,15 +30,15 @@ public class Acid extends GameObject implements Serializable {
         physics.offY = (int) posY % TS - (TS);
 
         int speed = 300;
-        physics.init(speed);
+        physics.init(this, speed);
     }
 
     @Override
     public void update(GameContainer gc, GameManager gm, float dt) {
         switch(direction)
         {
-            case 0: physics.offX += physics.getSPEED() * dt; physics.offY -= (physics.getSPEED() * dt) / 2; break;
-            case 1: physics.offX -= physics.getSPEED() * dt; physics.offY -= (physics.getSPEED() * dt) / 2; break;
+            case 0: physics.offX += physics.getSpeed() * dt; physics.offY -= (physics.getSpeed() * dt) / 2; break;
+            case 1: physics.offX -= physics.getSpeed() * dt; physics.offY -= (physics.getSpeed() * dt) / 2; break;
         }
 
         physics.apply(this, gm, dt);

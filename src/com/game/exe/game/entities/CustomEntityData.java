@@ -1,6 +1,8 @@
 package com.game.exe.game.entities;
 
-public class CustomEntityData {
+import java.io.Serializable;
+
+public class CustomEntityData implements Serializable {
 
     private Object[][] customData;
 

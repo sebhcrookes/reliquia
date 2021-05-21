@@ -15,6 +15,7 @@ public class GameLauncher {
             gm.startGame();
         } catch (Exception e) {
             System.out.println("There was an error during runtime. Exception: " + e.toString());
+            e.printStackTrace();
             String message = e.toString();
             System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(new JFrame(), message, "Fatal Error",

@@ -53,7 +53,7 @@ public class Inventory implements Serializable{
                 int direction = 0;
                 if(gm.player.facing == "right") { direction = 4; }
                 if(gm.player.facing == "left") { direction = -4; }
-                gm.entities.summonItem(item, gm.player.tileX, gm.player.tileY, direction, -2);
+                gm.entities.summonItem(item, gm.player.getTileX(), gm.player.getTileY(), direction, -2);
                 gm.player.sound.dropSound.play();
                 removeItem(items[selectedSlot - 1], 1);
 

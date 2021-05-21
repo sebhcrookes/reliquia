@@ -25,30 +25,28 @@ public class Panda extends GameObject implements Serializable {
 
     private String type;
 
-    private Physics physics = new Physics();
-
     public Panda(float posX, float posY) {
         this.posX = posX;
         this.posY = posY;
         this.tileX = (int)posX;
         this.tileY = (int)posY;
-        physics.setOffX(0);
-        physics.setOffY(0);
+        this.setOffX(0);
+        this.setOffY(0);
 
         int speed = 100;
-        physics.init(100);
+        this.init(this, speed);
     }
 
     @Override
     public void update(GameContainer gc, GameManager gm, float dt) {
 
-        physics.apply(this,gm, dt);
+        this.apply(this,gm, dt);
 
         //Panda AI
         if(allowMove) { originalPosX = this.tileX; amountToMove = gm.random.generate(0,6) - 3; allowMove = false; }
         if(this.tileX < originalPosX + amountToMove && amountToMove > 0) {
             if(!gm.getCollision(this.tileX + 1,this.tileY)) {
-                physics.offX += dt * moveSpeed;
+                this.offX += dt * moveSpeed;
             }else{
                 if(grounded) {
                     jump();
@@ -58,7 +56,7 @@ public class Panda extends GameObject implements Serializable {
             if(pandaImage.getPath() == "/assets/panda/left.png") { setImage("right"); }
         }else if(this.tileX > originalPosX + amountToMove && amountToMove < 0){
             if(!gm.getCollision(this.tileX - 1,this.tileY)) {
-                physics.offX -= dt * moveSpeed;
+                this.offX -= dt * moveSpeed;
             }else{
                 if(grounded) {
                     jump();

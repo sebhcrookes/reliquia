@@ -11,6 +11,7 @@ import com.game.exe.game.entities.Player;
 import com.game.exe.game.level.LevelManager;
 import com.game.exe.game.particles.Particles;
 import com.game.exe.engine.gfx.Image;
+import com.game.exe.game.serialisation.SerialisationManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,11 +26,12 @@ public class GameManager extends AbstractGame implements Serializable {
     public static final int TS = 16;
     public static final int AIR_COLOUR = 0xff92f4ff;
 
+    public GameContainer gc;
+
     public ArrayList<GameObject> objects = new ArrayList<GameObject>();
     private String[] collision;
 
     public Sprite sprite = new Sprite();
-    public Serialiser serialiser = new Serialiser(this);
     public Player player;
     public Camera camera = new Camera(this,"player");
     public Inventory inventory;
@@ -41,9 +43,9 @@ public class GameManager extends AbstractGame implements Serializable {
     public Controls controls = new Controls();
     public Backgrounds backgrounds = new Backgrounds(this);
     public Particles particles = new Particles(this);
-    public LevelManager lm;
 
-    public GameContainer gc;
+    public LevelManager lm;
+    public SerialisationManager sm;
 
     public int levelAmount = 2;
     public int levelNumber = 0;
@@ -63,49 +65,38 @@ public class GameManager extends AbstractGame implements Serializable {
     public int cinematicCount = 0;
     private int cinematicMax = 20;
 
+    public boolean loadingSucceeded = false;
 
     public GameManager(){
 
         lm = new LevelManager(gc,this);
+        sm = new SerialisationManager(gc, this);
 
-        boolean loadingSucceeded = false;
         entities = new Entities(this);
+
+        inventory = new Inventory(this);
+
+        blocks.initialise();
+        lm.getLevelLoader().load(this.levelNumber);
 
         //Load the game
         try{
-            String[] playerData = serialiser.loadPlayer(this);
-            player = new Player(Float.parseFloat(playerData[0]),Float.parseFloat(playerData[1]));
-            player.tileX = Integer.parseInt(playerData[2]);
-            player.tileY = Integer.parseInt(playerData[3]);
-            player.setOffX(Float.parseFloat(playerData[4]));
-            player.setOffY(Float.parseFloat(playerData[5]));
-            this.levelNumber = Integer.parseInt(playerData[6]);
-            player.colour = playerData[7]; player.setColour(playerData[7]);
-            loadingSucceeded = true;
+            sm.loadGame();
+        } catch (Exception ignored) {}
 
-        } catch (Exception e) {
-            player = new Player((int) spawnX, (int) spawnY);
-        }
-
-        inventory = new Inventory(this);
-        try{
-            serialiser.loadInventory(this);
-        }catch(Exception e) {}
-
-        objects.add(player);
-        blocks.initialise();
-        entities.summonMob(this,"beth", player.tileX, player.tileY);
-        lm.getLevelLoader().load(this.levelNumber);
         if(!loadingSucceeded) {
-            player.setLocation(spawnX, spawnY);
+            player = new Player(spawnX, spawnY);
         }
+        objects.add(player);
+
+        //entities.summonMob(this,"beth", player.getTileX(), player.getTileY());
     }
 
     @Override
     public void init(GameContainer gc) {
         gc.window.getFrame().addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                save();
+                sm.saveGame();
                 gc.stop();
             }
         });
@@ -192,9 +183,7 @@ public class GameManager extends AbstractGame implements Serializable {
 
     public void save() {
         try {
-            serialiser.createDirectories();
-            serialiser.savePlayer(this);
-            serialiser.saveInventory(this);
+            sm.saveGame();
         }catch (Exception e) {
             System.out.println("ERROR: Could not save game.");
         }

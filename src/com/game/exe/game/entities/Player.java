@@ -21,7 +21,6 @@ public class Player extends GameObject {
     private boolean isMovingL = false;
 
     public Sound sound = new Sound();
-    private Physics physics = new Physics();
 
     public String colour = "green";
     public int currentSprite = 0;
@@ -39,34 +38,45 @@ public class Player extends GameObject {
         this.tag = "player";
         this.tileX = (int)posX;
         this.tileY = (int)posY;
-        physics.offX = 0;
-        physics.offY = 0;
         this.posX = (int)(posX * GameManager.TS);
         this.posY = (int)(posY * GameManager.TS);
         this.isItem = false;
         this.dashCooldown = this.DASH;
 
         int speed = 100;
-        physics.init(speed);
+        this.init(this, speed);
+    }
+
+    public Player(float posX, float posY, float offX, float offY) {
+        this.tag = "player";
+        this.tileX = (int)posX;
+        this.tileY = (int)posY;
+        this.posX = (int)(posX * GameManager.TS);
+        this.posY = (int)(posY * GameManager.TS);
+        this.offX = offX;
+        this.offY = offY;
+        this.isItem = false;
+        this.dashCooldown = this.DASH;
+
+        int speed = 100;
+        this.init(this, speed);
     }
 
     @Override
     public void update(GameContainer gc, GameManager gm, float dt) {
 
-        physics.apply(this, gm, dt);
-
+        this.apply(this, gm, dt);
         if(isMovingR || isMovingL) { isMoving = true; } else { isMoving = false; }
 
         //region Item Pickup
         for(int i = 0; i < gm.objects.size(); i++) {
-            entitySearch:
-            if(gm.objects.get(i).isItem) {
+            if (gm.objects.get(i).isItem) {
                 float objectX = gm.objects.get(i).getPosX();
                 float objectY = gm.objects.get(i).getPosY();
-                if(posX >= objectX - 16 && posX <= objectX + 16) {
-                    if(posY >= objectY - 16 && posY <= objectY + 16) {
-                        if(gm.inventory.canStore(gm.objects.get(i).tag)) {
-                            if(gm.objects.get(i).customEntityData.getValue("PickupDelay") == null) {
+                if (posX >= objectX - 16 && posX <= objectX + 16) {
+                    if (posY >= objectY - 16 && posY <= objectY + 16) {
+                        if (gm.inventory.canStore(gm.objects.get(i).tag)) {
+                            if (gm.objects.get(i).customEntityData.getValue("PickupDelay") == null) {
                                 gm.objects.get(i).setDead(true);
                                 gm.inventory.pickup(gm.objects.get(i).tag);
                             }
@@ -83,17 +93,17 @@ public class Player extends GameObject {
             facing = "left";
             isMovingL = true;
             currentSprite = 1;
-            if(gm.getCollision(tileX - 1, tileY) || gm.getCollision(tileX - 1, tileY + (int)Math.signum(physics.offY))) {
-                if(physics.offX > 0) {
-                    physics.offX -= dt * currentSpeed;
-                    if(physics.offX < 0) {
-                        physics.offX = 0;
+            if(gm.getCollision(tileX - 1, tileY) || gm.getCollision(tileX - 1, tileY + (int)Math.signum(this.offY))) {
+                if(this.offX > 0) {
+                    this.offX -= dt * currentSpeed;
+                    if(this.offX < 0) {
+                        this.offX = 0;
                     }
                 }else{
-                    physics.offX = 0;
+                    this.offX = 0;
                 }
             }else{
-                physics.offX -= dt * currentSpeed;
+                this.offX -= dt * currentSpeed;
             }
         }else{
             isMovingL = false;
@@ -104,17 +114,17 @@ public class Player extends GameObject {
             facing = "right";
             isMovingR = true;
             currentSprite = 0;
-            if(gm.getCollision(tileX + 1, tileY) || gm.getCollision(tileX + 1, tileY + (int)Math.signum(physics.offY))) {
-                if(physics.offX < 0) {
-                    physics.offX += dt * currentSpeed;
-                    if(physics.offX > 0) {
-                        physics.offX = 0;
+            if(gm.getCollision(tileX + 1, tileY) || gm.getCollision(tileX + 1, tileY + (int)Math.signum(this.offY))) {
+                if(this.offX < 0) {
+                    this.offX += dt * currentSpeed;
+                    if(this.offX > 0) {
+                        this.offX = 0;
                     }
                 }else{
-                    physics.offX = 0;
+                    this.offX = 0;
                 }
             }else{
-                physics.offX += dt * currentSpeed;
+                this.offX += dt * currentSpeed;
             }
         }else{
             isMovingR = false;
@@ -152,13 +162,13 @@ public class Player extends GameObject {
         //endregion
         //region Jump
         if(gc.getInput().isKey(gm.controls.jump) || gc.getInput().isKey(gm.controls.alternateJump)) {
-            if(physics.grounded && gm.controls.allowControls) {
+            if(this.grounded && gm.controls.allowControls) {
                 if(!isSubmerged) {
                     sound.jumpSound.play();
                 }
                 gm.particles.createParticle("dust", posX + (playerImage.getW() >> 1), posY + playerImage.getH() - 3);
-                physics.fallDistance = -physics.getJumpPower();
-                physics.grounded = false;
+                this.fallDistance = -this.getJumpPower();
+                this.grounded = false;
             }
         }
         //endregion
@@ -176,10 +186,10 @@ public class Player extends GameObject {
 
 
         //Animation
-        if(isMovingL) { currentSprite = 1; }
-        else if(isMovingR) { currentSprite = 0; }
+        if(this.facing.equals("left")) { currentSprite = 1; }
+        else if(this.facing.equals("right")) { currentSprite = 0; }
 
-        if(!physics.grounded) {
+        if(!this.grounded) {
             if(currentSprite == 0) { currentSprite = 2; }
             if(currentSprite == 1) { currentSprite = 3; }
         } else {
@@ -188,7 +198,6 @@ public class Player extends GameObject {
         }
 
         updateImage();
-
     }
 
     @Override
@@ -199,8 +208,6 @@ public class Player extends GameObject {
     public void setLocation(int posX, int posY) {
         this.tileX = (int)posX;
         this.tileY = (int)posY;
-        this.physics.offX = 0;
-        this.physics.offY = 0;
         this.posX = posX * GameManager.TS;
         this.posY = posY * GameManager.TS;
     }
@@ -224,9 +231,19 @@ public class Player extends GameObject {
         }
     }
 
+    public String getDirection() {
+        return facing;
+    }
+
+    public void setDirection(String facing) {
+        this.facing = facing;
+    }
+
     public static float round(double n, int round2DecimalPlace) {
         BigDecimal instance = new BigDecimal(Double.toString(n));
         instance = instance.setScale(round2DecimalPlace, RoundingMode.HALF_UP);
         return instance.floatValue();
     }
+
+    public String getColour() { return this.colour; }
 }

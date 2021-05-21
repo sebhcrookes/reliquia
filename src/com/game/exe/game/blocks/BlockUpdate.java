@@ -16,31 +16,10 @@ public class BlockUpdate implements Serializable {
 
     public void update(GameContainer gc, GameManager gm, float dt) {
 
-        blockUnderPlayer = gm.getCollisionDetails(gm.player.tileX, gm.player.tileY + 1);
-        playerBlock = gm.getCollisionDetails(gm.player.tileX, gm.player.tileY);
+        blockUnderPlayer = gm.getCollisionDetails(gm.player.getTileX(), gm.player.getTileY() + 1);
+        playerBlock = gm.getCollisionDetails(gm.player.getTileX(), gm.player.getTileY());
 
-
-        //TODO: Spawning on mud makes speed exploit
-
-        if (blockUnderPlayer == "mudblock") {
-            if(!onMud) {
-                gm.player.currentSpeed -= gm.player.SPEED / 2;
-                gm.player.setJumpPower(gm.player.getJumpPower() - gm.player.getJUMP() / 2);
-                onMud = true;
-            }
-        }else{
-            if(onMud) {
-                gm.player.currentSpeed += gm.player.SPEED / 2;
-                gm.player.setJumpPower(gm.player.getJumpPower() + gm.player.getJumpPower() / 2);
-                onMud = false;
-            }
-        }
-
-        if(playerBlock == "water" || playerBlock == "watersurface") {
-            gm.player.setUnderwater(true);
-        }else{
-            gm.player.setUnderwater(false);
-        }
+        //TODO: Add in mud slowness
 
         //Portal Block
         if (playerBlock == gm.getBlockIDFromNumber(7)) {
