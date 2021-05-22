@@ -34,6 +34,8 @@ public class Player extends GameObject {
     private final float DASH = 0.3f;
     private float dashCooldown;
 
+    private int mouseTileX = 0, mouseTileY = 0;
+
     public Player(float posX, float posY) {
         this.tag = "player";
         this.tileX = (int)posX;
@@ -149,7 +151,7 @@ public class Player extends GameObject {
         if(dashTime > 0) {
             dashTime--;
             if (dashTime % 4 == 0) {
-                gm.particles.createParticle("player", posX, posY);
+                gm.pm.createParticle("player", posX, posY);
             }
         }
         if(dashTime == 0) {
@@ -166,7 +168,7 @@ public class Player extends GameObject {
                 if(!isSubmerged) {
                     sound.jumpSound.play();
                 }
-                gm.particles.createParticle("dust", posX + (playerImage.getW() >> 1), posY + playerImage.getH() - 3);
+                gm.pm.createParticle("dust", posX + (playerImage.getW() >> 1), posY + playerImage.getH() - 3);
                 this.fallDistance = -this.getJumpPower();
                 this.grounded = false;
             }
@@ -197,12 +199,16 @@ public class Player extends GameObject {
             if(currentSprite == 3) { currentSprite = 1; }
         }
 
+        mouseTileX = (int)(gc.getInput().getMouseX()+ gm.camera.getOffX());
+        mouseTileY = (int)(gc.getInput().getMouseY()+ gm.camera.getOffY());
+
         updateImage();
     }
 
     @Override
     public void render(GameContainer gc, Renderer r) {
         r.drawImage(playerImage, (int) this.posX, (int) this.posY);
+        r.drawLine((int)(mouseTileX),(int)(mouseTileY),(int)this.posX,(int)this.posY,0xffffffff);
     }
 
     public void setLocation(int posX, int posY) {

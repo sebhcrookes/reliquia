@@ -2,7 +2,7 @@ package com.game.exe.game.level;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.game.GameManager;
-import com.game.exe.game.particles.Particles;
+import com.game.exe.game.particles.ParticleManager;
 
 public class LevelWeather {
 
@@ -40,7 +40,7 @@ public class LevelWeather {
         if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
             bgParticle = 0;
 
-            gm.particles.createParticle(weatherType,gm.random.generate((int)gm.camera.getOffX(), (int)gm.camera.getOffX() + gc.getWidth()), gm.camera.getOffY(), Particles.WIND_STRONG);
+            gm.pm.createParticle(weatherType,gm.random.generate((int)gm.camera.getOffX(), (int)gm.camera.getOffX() + gc.getWidth()), gm.camera.getOffY(), ParticleManager.WIND_STRONG);
         }
         bgParticle++;
     }

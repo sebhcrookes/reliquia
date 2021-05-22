@@ -2,7 +2,6 @@ package com.game.exe.game.particles;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.engine.util.Logger;
 import com.game.exe.game.GameManager;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.engine.gfx.Image;
@@ -19,16 +18,6 @@ public class Particle extends GameObject {
     private Image image;
     private int existenceTime;
     private int decayType;
-
-    private int fallSpeed = 0;
-
-    public Particle(float posX, float posY, String imagePath, int existenceTime, int decayType) {
-        this.posX = posX;
-        this.posY = posY;
-        this.image = new Image(imagePath);
-        this.existenceTime = existenceTime;
-        this.decayType = decayType;
-    }
 
     public Particle(float posX, float posY, String imagePath, int existenceTime, int decayType, int fallSpeed) {
         this.posX = posX;
@@ -79,14 +68,14 @@ public class Particle extends GameObject {
         }
 
         switch(component) {
-            case Particles.WIND_LIGHT:
+            case ParticleManager.WIND_LIGHT:
                 if(gm.random.generate(1,4) == 2)
                     posX--;
                 return;
-            case Particles.WIND_MEDIUM:
+            case ParticleManager.WIND_MEDIUM:
                 posX--;
                 return;
-            case Particles.WIND_STRONG:
+            case ParticleManager.WIND_STRONG:
                 posX-=2;
                 return;
         }

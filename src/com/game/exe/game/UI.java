@@ -92,8 +92,8 @@ public class UI implements Serializable{
             lines[0] = "FPS: " + gc.getFps() + " ";
         }
 
-        mouseTileX = (int)(gc.getInput().getMouseX()+ gm.camera.getOffX()) / gm.TS;
-        mouseTileY = (int)(gc.getInput().getMouseY()+ gm.camera.getOffY()) / gm.TS;
+        mouseTileX = (int)(gc.getInput().getMouseX()+ gm.camera.getOffX()) / GameManager.TS;
+        mouseTileY = (int)(gc.getInput().getMouseY()+ gm.camera.getOffY()) / GameManager.TS;
     }
 
     public void render(Renderer r, GameContainer gc) {
@@ -102,7 +102,7 @@ public class UI implements Serializable{
 
         //Render Selection Box
         if(gm.getCollisionDetails(mouseTileX, mouseTileY) != null) {
-            r.drawImage(gm.sprite.selectedTile, mouseTileX * 16, mouseTileY * 16);
+            r.drawImage(gm.sprite.selectedTile, mouseTileX * GameManager.TS, mouseTileY * GameManager.TS);
             //if(gc.getInput().isButton(MouseEvent.BUTTON1)){
                 //gm.setBlock(mouseTileX, mouseTileY, "air");
             //}

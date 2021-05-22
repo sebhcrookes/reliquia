@@ -5,7 +5,7 @@ import com.game.exe.engine.Renderer;
 import com.game.exe.game.GameManager;
 import com.game.exe.game.entities.GameObject;
 
-public class Particles {
+public class ParticleManager {
 
     public static final int PERMANENT = Integer.MAX_VALUE;
     public static final int AUTOMATIC = 0;
@@ -15,12 +15,15 @@ public class Particles {
     public static final int WIND_MEDIUM = 2;
     public static final int WIND_STRONG = 3;
 
-    private GameObject[] particles = new GameObject[1000];
+    private GameObject[] particles;
     private GameManager gm;
 
 
-    public Particles(GameManager gm) {
+    public ParticleManager(GameManager gm) {
         this.gm = gm;
+
+        int particleLimit = 1000;
+        this.particles = new GameObject[particleLimit];
     }
 
     public void update(GameContainer gc, GameManager gm, float dt) {

@@ -9,14 +9,11 @@ import com.game.exe.game.entities.Entities;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.game.entities.Player;
 import com.game.exe.game.level.LevelManager;
-import com.game.exe.game.particles.Particles;
-import com.game.exe.engine.gfx.Image;
+import com.game.exe.game.particles.ParticleManager;
 import com.game.exe.game.serialisation.SerialisationManager;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ public class GameManager extends AbstractGame implements Serializable {
     public BlockUpdate updater = new BlockUpdate();
     public Controls controls = new Controls();
     public Backgrounds backgrounds = new Backgrounds(this);
-    public Particles particles = new Particles(this);
+    public ParticleManager pm = new ParticleManager(this);
 
     public LevelManager lm;
     public SerialisationManager sm;
@@ -109,13 +106,13 @@ public class GameManager extends AbstractGame implements Serializable {
         //This is the update function
         ui.update(this,gc);
         updater.update(gc,this,dt);
-        particles.update(gc, this, dt);
+        pm.update(gc, this, dt);
         lm.update(gc,dt);
 
         if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
             bgParticle = 0;
 
-            particles.createParticle(weatherType,random.generate((int)camera.getOffX(), (int)camera.getOffX() + gc.getWidth()), camera.getOffY(), particles.AUTOMATIC);
+            pm.createParticle(weatherType,random.generate((int)camera.getOffX(), (int)camera.getOffX() + gc.getWidth()), camera.getOffY(), ParticleManager.AUTOMATIC);
         }
         bgParticle++;
 
@@ -149,7 +146,7 @@ public class GameManager extends AbstractGame implements Serializable {
 
         camera.render(r);
         backgrounds.render(gc, r);
-        particles.render(gc, r);
+        pm.render(gc, r);
 
         for(int y = 0; y < lm.getLevelH(); y++) {
             for (int x = 0; x < lm.getLevelW(); x++) {
