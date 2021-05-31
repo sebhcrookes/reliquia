@@ -16,7 +16,7 @@ public class LevelManager {
         lw = new LevelWeather(gc,gm,this);
     }
 
-    public void update(GameContainer gc, float dt) { lw.update(gc,dt); }
+    public void update(GameContainer gc, GameManager gm, float dt) { lw.update(gc,gm,dt); }
 
     public LevelLoader getLevelLoader() { return ll; }
     public LevelWeather getLevelWeather() { return lw; }

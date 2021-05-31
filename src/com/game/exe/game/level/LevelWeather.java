@@ -36,7 +36,7 @@ public class LevelWeather {
         }
     }
 
-    public void update(GameContainer gc, float dt) {
+    public void update(GameContainer gc, GameManager gm, float dt) {
         if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
             bgParticle = 0;
 

@@ -3,6 +3,8 @@ package com.game.exe.game;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
 import com.game.exe.engine.gfx.Image;
+import com.game.exe.game.ui.UICustomRender;
+import com.game.exe.game.ui.UIObject;
 
 import java.io.Serializable;
 
@@ -20,7 +22,7 @@ public class Inventory implements Serializable{
     private int inventorySlotHeight = 9;
     public int inventorySlots = 6;
 
-    private int selectedSlot = 1;
+    public int selectedSlot = 1;
     public String itemSelected = "";
 
     private GameManager gm;
@@ -33,6 +35,74 @@ public class Inventory implements Serializable{
     public Inventory(GameManager gm) {
         this.gm = gm;
         healthUpdate();
+
+        gm.um.addUIOverlay("inventory", new Image("/assets/ui/inventory.png"), 0, 0, new UICustomRender() {
+            @Override
+            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {
+                uiObject.setPosX((gc.getWidth() - uiObject.getImage().getW()) >> 1);
+                uiObject.setPosY((gc.getHeight() - uiObject.getImage().getH()) - (6 + gm.cinematicCount));
+            }
+
+            @Override
+            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
+                r.drawImage(uiObject.getImage(), (int)uiObject.getPosX(), (int)uiObject.getPosY());
+                System.out.println("epic");
+            }
+        });
+
+        gm.um.addUIOverlay("inventorySelector", null, 0, 0, new UICustomRender() {
+            @Override
+            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {}
+
+            @Override
+            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
+                r.drawRect((gc.getWidth() - inventory.getW()) / 2 + (selectedSlot-1) * (inventorySlotWidth + 1),
+                        (gc.getHeight() - inventory.getH()) - 6 + gm.cinematicCount,
+                        inventorySlotWidth + 1,
+                        inventorySlotHeight + 1,
+                        0xffffffff);
+            }
+        });
+
+        gm.um.addUIOverlay("inventoryText", null, 0, 0, new UICustomRender() {
+            @Override
+            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {}
+
+            @Override
+            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
+                for(int i = 0; i < items.length; i++) {
+                    if(itemCount[i] != 0) {
+                        r.drawText(String.valueOf(itemCount[i]),
+                                (gc.getWidth() - inventory.getW()) / 2 + (i * (inventorySlotWidth + 1) + 1),
+                                ((gc.getHeight() - 1) - inventorySlotHeight * 2) - 6 + gm.cinematicCount,
+                                0xffffffff);
+                    }
+                }
+            }
+        });
+
+        gm.um.addUIOverlay("inventoryImages", null, 0, 0, new UICustomRender() {
+            @Override
+            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {
+
+            }
+
+            @Override
+            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
+                for(int i = 0; i < items.length; i++) {
+                    if(items[i] != "" && items[i] != null) {
+
+                        for(int n = 0; n < gm.entities.im.itemList.length; n++) {
+                            if(items[i].equals(gm.entities.im.itemList[n].itemID)) {
+                                r.drawImage(gm.entities.im.itemList[n].itemImage,
+                                        (gc.getWidth() - inventory.getW()) / 2 + (int)((i * (inventorySlotWidth + 1)) + 1) + ((inventorySlotWidth - gm.entities.im.itemList[n].itemImage.getW()) / 2),
+                                        ((gc.getHeight() - 1) - (inventorySlotHeight + gm.entities.im.itemList[n].itemImage.getH()) / 2) - (6 + gm.cinematicCount));
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void update(GameManager gm, GameContainer gc) {
@@ -97,23 +167,6 @@ public class Inventory implements Serializable{
         int offY = 6 + gm.cinematicCount;
 
         r.drawImage(healthImage, (gc.getWidth() - healthImage.getW()) / 2, (gc.getHeight() - healthImage.getH() + 5) - offY);
-
-        for(int i = 0; i < items.length; i++) {
-            if(items[i] != "" && items[i] != null) {
-
-                for(int n = 0; n < gm.entities.im.itemList.length; n++) {
-                    if(items[i].equals(gm.entities.im.itemList[n].itemID)) {
-                        r.drawImage(gm.entities.im.itemList[n].itemImage, offX + (int)((i * (inventorySlotWidth + 1)) + 1) + ((inventorySlotWidth - gm.entities.im.itemList[n].itemImage.getW()) / 2), ((gc.getHeight() - 1) - (inventorySlotHeight + gm.entities.im.itemList[n].itemImage.getH()) / 2) - offY);
-                    }
-                }
-            }
-            if(itemCount[i] != 0) {
-                r.drawText(String.valueOf(itemCount[i]), offX + (i * (inventorySlotWidth + 1) + 1), ((gc.getHeight() - 1) - inventorySlotHeight * 2) - offY, 0xffffffff);
-            }
-        }
-
-        r.drawImage(inventory, offX, (gc.getHeight() - inventory.getH()) - offY);
-        r.drawRect(offX + (selectedSlot-1) * (inventorySlotWidth + 1), (gc.getHeight() - inventory.getH()) - offY, inventorySlotWidth + 1, inventorySlotHeight + 1, 0xffffffff);
     }
 
     public void pickup(String item) {
@@ -179,6 +232,14 @@ public class Inventory implements Serializable{
         try {
             healthImage = new Image("/assets/ui/health/" + health + ".png");
         }catch(Exception e) {}
+    }
+
+    public int getSelectedSlot() {
+        return selectedSlot;
+    }
+
+    public void setSelectedSlot(int selectedSlot) {
+        this.selectedSlot = selectedSlot;
     }
 
     public void playSound(String soundName) {
