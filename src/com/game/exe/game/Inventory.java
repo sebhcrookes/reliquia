@@ -20,9 +20,9 @@ public class Inventory implements Serializable {
     private final int MAX_ITEMS = 32;
     private final int SLOT_WIDTH = 9;
     private final int SLOT_HEIGHT = 9;
-    private final GameManager gm;
+    private final GameState gm;
 
-    public Inventory(GameManager gm) {
+    public Inventory(GameState gm) {
         this.gm = gm;
 
         items = new String[inventorySlots];
@@ -35,7 +35,7 @@ public class Inventory implements Serializable {
         UIManager.addUIObject(inventoryUI);
     }
 
-    public void update(GameManager gm, GameContainer gc) {
+    public void update(GameState gm, GameContainer gc) {
 
         if (items == null) {
             items = new String[inventorySlots];
@@ -168,20 +168,20 @@ class InventoryUI extends UIObject {
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {
-        this.setPosX((gc.getWidth() - inventory.getW()) >> 1);
-        this.setPosY((gc.getHeight() - inventory.getH()) - (6 + gm.cinematicCount));
+    public void update(GameContainer gc, GameState gm, float dt) {
+        this.setPosX((gc.getWidth() - inventory.getWidth()) >> 1);
+        this.setPosY((gc.getHeight() - inventory.getHeight()) - (6 + gm.cinematicCount));
     }
 
     @Override
-    public void render(GameContainer gc, GameManager gm, Renderer r) {
+    public void render(GameContainer gc, GameState gm, Renderer r) {
 
         // Inventory Outline
         r.drawImage(inventory, (int) this.getPosX(), (int) this.getPosY());
 
         // Inventory Slot Selector
-        r.drawRect((gc.getWidth() - inventory.getW()) / 2 + (gm.inventory.getSelectedSlot() - 1) * (gm.inventory.getSlotWidth() + 1),
-                (gc.getHeight() - inventory.getH()) - 6 + gm.cinematicCount,
+        r.drawRect((gc.getWidth() - inventory.getWidth()) / 2 + (gm.inventory.getSelectedSlot() - 1) * (gm.inventory.getSlotWidth() + 1),
+                (gc.getHeight() - inventory.getHeight()) - 6 + gm.cinematicCount,
                 gm.inventory.getSlotWidth() + 1,
                 gm.inventory.getSlotHeight() + 1,
                 0xffffffff);
@@ -190,7 +190,7 @@ class InventoryUI extends UIObject {
         for (int i = 0; i < gm.inventory.items.length; i++) {
             if (gm.inventory.itemCount[i] != 0) {
                 r.drawText(String.valueOf(gm.inventory.itemCount[i]),
-                        (gc.getWidth() - inventory.getW()) / 2 + (i * (gm.inventory.getSlotWidth() + 1) + 1),
+                        (gc.getWidth() - inventory.getWidth()) / 2 + (i * (gm.inventory.getSlotWidth() + 1) + 1),
                         ((gc.getHeight() - 1) - gm.inventory.getSlotHeight() * 2) - 6 + gm.cinematicCount,
                         0xffffffff);
             }
@@ -203,8 +203,8 @@ class InventoryUI extends UIObject {
                 for (int n = 0; n < gm.em.im.itemList.length; n++) {
                     if (gm.inventory.items[i].equals(gm.em.im.itemList[n].itemID)) {
                         r.drawImage(gm.em.im.itemList[n].itemImage,
-                                (gc.getWidth() - inventory.getW()) / 2 + (i * (gm.inventory.getSlotWidth() + 1)) + 1 + ((gm.inventory.getSlotWidth() - gm.em.im.itemList[n].itemImage.getW()) / 2),
-                                ((gc.getHeight() - 1) - (gm.inventory.getSlotHeight() + gm.em.im.itemList[n].itemImage.getH()) / 2) - (6 + gm.cinematicCount));
+                                (gc.getWidth() - inventory.getWidth()) / 2 + (i * (gm.inventory.getSlotWidth() + 1)) + 1 + ((gm.inventory.getSlotWidth() - gm.em.im.itemList[n].itemImage.getWidth()) / 2),
+                                ((gc.getHeight() - 1) - (gm.inventory.getSlotHeight() + gm.em.im.itemList[n].itemImage.getHeight()) / 2) - (6 + gm.cinematicCount));
                     }
                 }
             }

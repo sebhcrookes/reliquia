@@ -2,7 +2,7 @@ package com.game.exe.game.background;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 import com.game.exe.engine.gfx.Image;
 
 public class Backgrounds {
@@ -12,9 +12,9 @@ public class Backgrounds {
     private Tree[] trees = new Tree[100];
     private int treeCount = 0;
 
-    private GameManager gm;
+    private GameState gm;
 
-    public Backgrounds(GameManager gm) {
+    public Backgrounds(GameState gm) {
         this.gm = gm;
     }
 
@@ -31,7 +31,7 @@ public class Backgrounds {
 
     public void createTree(int x, int y) {
         try {
-            trees[treeCount] = new Tree(x, y - (tree.getH() / gm.TS));
+            trees[treeCount] = new Tree(x, y - (tree.getHeight() / gm.TS));
             treeCount++;
         }catch(Exception e) {}
     }

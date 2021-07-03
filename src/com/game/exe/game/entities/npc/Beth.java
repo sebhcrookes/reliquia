@@ -2,7 +2,8 @@ package com.game.exe.game.entities.npc;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.engine.position.Vector2;
+import com.game.exe.game.GameState;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.engine.gfx.Image;
 
@@ -15,7 +16,7 @@ public class Beth extends GameObject {
     private Image chatLeft = new Image("/assets/ui/chat/left.png");
     private Image chatRight = new Image("/assets/ui/chat/right.png");
 
-    private GameManager gm;
+    private GameState gm;
 
     private boolean inConversation = false;
     private String output = "";
@@ -25,11 +26,10 @@ public class Beth extends GameObject {
     private boolean conversationFinished = true;
     private int convCount = 0;
 
-    public Beth(GameManager gm, float posX, float posY) {
+    public Beth(GameState gm, float posX, float posY) {
         this.gm = gm;
         this.tag = "beth";
-        this.posX = posX;
-        this.posY = posY;
+        this.position = new Vector2((int)posX, (int)posY);
         this.tileX = (int)posX;
         this.tileY = (int)posY;
         this.setOffX(0);
@@ -43,11 +43,11 @@ public class Beth extends GameObject {
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
 
         this.physicsApply(this, gm, dt);
 
-        if(gm.player.posX <= this.posX) {
+        if(gm.player.position.getPosX() <= this.position.getPosX()) {
             if(bethImage != leftImage) {
                 bethImage = leftImage;
             }
@@ -64,8 +64,8 @@ public class Beth extends GameObject {
             int mouseX = gc.getInput().getMouseX() + (int)gm.camera.getOffX();
             int mouseY = gc.getInput().getMouseY() + (int)gm.camera.getOffY();
 
-            if(mouseY <= (int)this.posY + bethImage.getW() && mouseY >= (int)this.posY) {
-                if(mouseX <= (int)this.posX + bethImage.getH() && mouseX >= (int)this.posX) {
+            if(mouseY <= (int)this.position.getPosY() + bethImage.getWidth() && mouseY >= (int)this.position.getPosY()) {
+                if(mouseX <= (int)this.position.getPosX() + bethImage.getHeight() && mouseX >= (int)this.position.getPosX()) {
                     gm.toggleBars();
                     if(!inConversation) {
                         inConversation = true;
@@ -84,7 +84,7 @@ public class Beth extends GameObject {
 
     @Override
     public void render(GameContainer gc, Renderer r) {
-        r.drawImage(bethImage, (int)posX, (int)posY);
+        r.drawImage(bethImage, (int)position.getPosX(), (int)position.getPosY());
         if(!conversationFinished) {
             convCount++;
             if (convCount % 1000 == 0) {
@@ -97,20 +97,20 @@ public class Beth extends GameObject {
             }
         }
         if(inConversation) {
-            int textX = (int)posX;
-            int textY = (int)posY - 10;
+            int textX = (int)position.getPosX();
+            int textY = (int)position.getPosY() - 10;
 
-            System.out.println(posX + " : " + textX);
-            System.out.println(posY + " : " + textY);
+            System.out.println(position.getPosX() + " : " + textX);
+            System.out.println(position.getPosY() + " : " + textY);
 
             int offL = 1;
             int offR = 1;
 
-            r.drawImage(chatLeft, textX - (r.textLength(output) / 2) + (bethImage.getW() / 2), textY);
-            r.drawImage(chatRight, textX + (r.textLength(output) / 2) + (bethImage.getW() / 2) - chatRight.getW() / 2, textY);
+            r.drawImage(chatLeft, textX - (r.textLength(output) / 2) + (bethImage.getWidth() / 2), textY);
+            r.drawImage(chatRight, textX + (r.textLength(output) / 2) + (bethImage.getWidth() / 2) - chatRight.getWidth() / 2, textY);
             //r.drawFillRect(textX - (r.textLength(output) / 2) + (bethImage.getW() / 2) + (chatLeft.getW()), textY + 1, r.textLength(output) - chatRight.getW() * 2, chatLeft.getH() - 3, 0xff1dc689);
 
-            r.drawText(output, textX - (r.textLength(output) / 2) + (bethImage.getW() / 2), textY, 0xffffffff);
+            r.drawText(output, textX - (r.textLength(output) / 2) + (bethImage.getWidth() / 2), textY, 0xffffffff);
         }
     }
 }

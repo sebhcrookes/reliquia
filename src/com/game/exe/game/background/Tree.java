@@ -2,7 +2,8 @@ package com.game.exe.game.background;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.engine.position.Vector2;
+import com.game.exe.game.GameState;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.engine.gfx.Image;
 
@@ -12,16 +13,15 @@ public class Tree extends GameObject {
 
     public Tree(int posX, int posY) {
         this.tag = "tree";
-        this.posX = posX;
-        this.posY = posY;
+        this.position = new Vector2(posX, posY);
         this.isItem = false;
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {}
+    public void update(GameContainer gc, GameState gm, float dt) {}
 
     @Override
     public void render(GameContainer gc, Renderer r) {
-        r.drawImage(treeImage, (int)posX * 16, (int)(posY * 16));
+        r.drawImage(treeImage, (int)position.getPosX() * 16, (int)(position.getPosY() * 16));
     }
 }

@@ -2,23 +2,24 @@ package com.game.exe.game.ui;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.engine.gfx.Image;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 public class UIManager {
 
-    private GameManager gm;
+    private GameContainer gc;
+    private GameState gm;
 
-    private UIObject[] uiObjects;
+    private static UIObject[] uiObjects;
 
-    public UIManager(GameManager gm) {
+    public UIManager(GameContainer gc, GameState gm) {
+        this.gc = gc;
         this.gm = gm;
 
         int maxObjects = 100;
         uiObjects = new UIObject[maxObjects];
     }
 
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
         for(UIObject uiObject : uiObjects) {
             if (uiObject == null) {
                 continue;
@@ -38,12 +39,21 @@ public class UIManager {
         }
     }
 
-    public void addUIOverlay(String tag, Image image, float posX, float posY, UICustomRender customRender) {
+    public static void addUIObject(UIObject uiObject) {
         for (int i = 0; i < uiObjects.length; i++) {
             if (uiObjects[i] == null) {
-                uiObjects[i] = new UIObject(tag, image, posX, posY, customRender);
+                uiObjects[i] = uiObject;
                 return;
             }
         }
+    }
+
+    public static UIObject getUIObject(String tag) {
+        for(int i = 0; i < uiObjects.length; i++) {
+            if(uiObjects[i].getTag() == tag) {
+                return uiObjects[i];
+            }
+        }
+        return null;
     }
 }

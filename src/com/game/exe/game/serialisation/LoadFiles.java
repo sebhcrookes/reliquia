@@ -2,7 +2,7 @@ package com.game.exe.game.serialisation;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.util.Logger;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 import com.game.exe.game.entities.CustomEntityData;
 import com.game.exe.game.entities.Player;
 
@@ -13,11 +13,11 @@ import java.io.ObjectInputStream;
 public class LoadFiles {
 
     private GameContainer gc;
-    private GameManager gm;
+    private GameState gm;
 
     private SerialisationManager sm;
 
-    public LoadFiles(GameContainer gc, GameManager gm, SerialisationManager sm) {
+    public LoadFiles(GameContainer gc, GameState gm, SerialisationManager sm) {
         this.gc = gc;
         this.gm = gm;
         this.sm = sm;

@@ -2,20 +2,20 @@ package com.game.exe.game.particles;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 import com.game.exe.game.entities.GameObject;
 
 public class ParticleManager {
 
     public static final ParticleComponent NONE = new ParticleComponent() {
         @Override
-        public void update(Particle p, GameContainer gc, GameManager gm, float dt) {}
+        public void update(Particle p, GameContainer gc, GameState gm, float dt) {}
     };
 
     public static final ParticleComponent COLLIDE = new ParticleComponent() {
         @Override
-        public void update(Particle p, GameContainer gc, GameManager gm, float dt) {
-            if(gm.getParticleCollision((int)p.posX / GameManager.TS, (int)p.posY / GameManager.TS)) {
+        public void update(Particle p, GameContainer gc, GameState gm, float dt) {
+            if(gm.getParticleCollision((int)p.posX / GameState.TS, (int)p.posY / GameState.TS)) {
                 p.setDead(true);
             }
         }
@@ -25,23 +25,23 @@ public class ParticleManager {
     public static final int WIND_MEDIUM = 2;
     public static final ParticleComponent WIND_STRONG = new ParticleComponent() {
         @Override
-        public void update(Particle p, GameContainer gc, GameManager gm, float dt) {
+        public void update(Particle p, GameContainer gc, GameState gm, float dt) {
             p.posX -= 2;
         }
     };
 
     private GameObject[] particles;
-    private GameManager gm;
+    private GameState gm;
 
 
-    public ParticleManager(GameManager gm) {
+    public ParticleManager(GameState gm) {
         this.gm = gm;
 
         int particleLimit = 1000;
         this.particles = new GameObject[particleLimit];
     }
 
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
         for(int i = 0; i < particles.length; i++) {
             if(particles[i] == null) { continue; }
             particles[i].update(gc, gm, dt);

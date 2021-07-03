@@ -2,7 +2,8 @@ package com.game.exe.game.entities;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.engine.position.Vector2;
+import com.game.exe.game.GameState;
 import com.game.exe.engine.gfx.Image;
 
 import java.io.Serializable;
@@ -26,8 +27,7 @@ public class Panda extends GameObject implements Serializable {
     private String type;
 
     public Panda(float posX, float posY) {
-        this.posX = posX;
-        this.posY = posY;
+        this.position = new Vector2((int)posX, (int)posY);
         this.tileX = (int)posX;
         this.tileY = (int)posY;
         this.setOffX(0);
@@ -38,7 +38,7 @@ public class Panda extends GameObject implements Serializable {
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
 
         this.physicsApply(this,gm, dt);
 
@@ -90,6 +90,6 @@ public class Panda extends GameObject implements Serializable {
 
     @Override
     public void render(GameContainer gc, Renderer r) {
-        r.drawImage(pandaImage, (int) (posX), (int) (posY));
+        r.drawImage(pandaImage, (int) (position.getPosX()), (int) (position.getPosY()));
     }
 }

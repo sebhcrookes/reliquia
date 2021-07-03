@@ -19,12 +19,12 @@ public class Font {
 
         int unicode = 0;
 
-        for(int i = 0; i < fontImage.getW(); i++) {
-            if(fontImage.getP()[i] == 0xff0000ff) {
+        for(int i = 0; i < fontImage.getWidth(); i++) {
+            if(fontImage.getPixels()[i] == 0xff0000ff) {
                 offsets[unicode] = i + textSpacing;
             }
 
-            if(fontImage.getP()[i] == 0xffffff00) {
+            if(fontImage.getPixels()[i] == 0xffffff00) {
                 widths[unicode] = i - offsets[unicode];
                 unicode++;
             }
@@ -60,7 +60,7 @@ public class Font {
     }
 
     public int getHeight() {
-        return fontImage.getH();
+        return fontImage.getHeight();
     }
 
 }

@@ -1,12 +1,12 @@
 package com.game.exe.game.entities.items;
 
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 import java.io.Serializable;
 
 public class Items implements Serializable {
 
-    public GameManager gm;
+    public GameState gm;
 
     public ItemFramework acid;
     public ItemFramework heartFragment;
@@ -14,7 +14,7 @@ public class Items implements Serializable {
 
     public ItemFramework[] itemList = new ItemFramework[3];
 
-    public Items(GameManager gm) {
+    public Items(GameState gm) {
 
         acid = new ItemFramework("acidbottle", gm.sprite.acidImage, "#");
         heartFragment = new ItemFramework("heartfragment", gm.sprite.heartImage, "%");

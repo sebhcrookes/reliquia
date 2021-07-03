@@ -1,63 +1,72 @@
 package com.game.exe.engine;
 
-import com.game.exe.engine.util.EngineUtilities;
+import com.game.engine.engine.util.EngineSettings;
 import com.game.exe.engine.util.Logger;
-import com.game.exe.game.GameManager;
+import com.game.exe.engine.util.State;
+import com.game.exe.engine.Game;
+import com.game.exe.engine.Input;
+import com.game.exe.engine.Renderer;
+import com.game.exe.engine.Window;
 
 public class GameContainer implements Runnable {
 
     private Thread thread;
     private Renderer renderer;
-    public Window window;
+    private Window window;
     private Input input;
-    private AbstractGame game;
-    private EngineSettings settings = new EngineSettings();
+    private Game game;
+    private EngineSettings settings;
     private Logger logger = new Logger();
-    private EngineUtilities utilities = new EngineUtilities();
 
-    private GameManager gm;
-
-    private boolean isFPSCapped = false;
+    public int clearColour = 0xFF000000;
 
     private boolean running = false;
-
-    private float scale = 3f;
     public int fps = 0;
 
-    public GameContainer(AbstractGame game) {
+    public GameContainer(Game game, EngineSettings settings) {
         this.game = game;
+        this.settings = settings;
     }
 
-    public void start(GameManager gm) {
+    public void start() {
         window = new Window(this);
         renderer = new Renderer(this);
         input = new Input(this);
+        //logger.init(settings.getTitle());
 
-        scale = settings.getScale();
-
-        this.gm = gm;
         thread = new Thread(this);
-        thread.run();
+        thread.start();
+
+        getWindow().getFrame().addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                stop();
+            }
+        });
+
     }
 
-    public void stop() { this.running = false; }
+    public void stop() {
+        this.running = false;
+        game.dispose();
+        game.getState().dispose();
+    }
 
     public void run() {
         running = true;
 
-        boolean render = false;
-        double firstTime = 0;
+        boolean render;
+        double firstTime;
         double lastTime = System.nanoTime() / 1000000000.0;
-        double passedTime = 0;
+        double passedTime;
         double unprocessedTime = 0;
 
         double frameTime = 0;
         int frames = 0;
 
-        game.init(this);
+        game.init();
 
         while(running) {
-            render = !settings.isLockFPS(); // Change from FALSE to TRUE to uncap frame-rate
+            render = !settings.isLockFPS(); // Change to uncap frame-rate
 
             firstTime = System.nanoTime() / 1000000000.0;
             passedTime = firstTime - lastTime;
@@ -76,7 +85,7 @@ public class GameContainer implements Runnable {
                     frames = 0;
                 }
 
-                game.update(this,(float)settings.getUpdateCap());
+                game.getState().update(this,(float)settings.getUpdateCap());
                 window.update();
                 input.update();
             }
@@ -84,7 +93,7 @@ public class GameContainer implements Runnable {
             if(render) {
                 frames++;
                 renderer.clear();
-                game.render(this,renderer);
+                game.getState().render(this, renderer);
                 renderer.process();
             }else{
                 try {
@@ -116,13 +125,6 @@ public class GameContainer implements Runnable {
         return settings.getScale();
     }
 
-    public void setScale(float scale) {
-        settings.setScale(scale);
-        try {
-            window.setScale((int) scale);
-        }catch(Exception e) {}
-    }
-
     public String getTitle() {
         return settings.getTitle();
     }
@@ -151,13 +153,7 @@ public class GameContainer implements Runnable {
         return settings;
     }
 
-    public Logger getLogger() {
-        return logger;
-    }
-
-    public EngineUtilities getUtilities() { return utilities; }
-
-    public void setIsFPSCapped(boolean isFPSCapped) {
-        this.isFPSCapped = isFPSCapped;
+    public Game getGame() {
+        return game;
     }
 }

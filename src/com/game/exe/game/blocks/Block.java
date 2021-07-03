@@ -2,7 +2,7 @@ package com.game.exe.game.blocks;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 import com.game.exe.engine.gfx.Image;
 
 public class Block extends AbstractBlock {
@@ -16,7 +16,7 @@ public class Block extends AbstractBlock {
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {}
+    public void update(GameContainer gc, GameState gm, float dt) {}
 
     @Override
     public void render(GameContainer gc, Renderer r) {}

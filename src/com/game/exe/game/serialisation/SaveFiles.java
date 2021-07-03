@@ -2,7 +2,7 @@ package com.game.exe.game.serialisation;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.util.Logger;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,11 +11,11 @@ import java.io.ObjectOutputStream;
 public class SaveFiles {
 
     private GameContainer gc;
-    private GameManager gm;
+    private GameState gm;
 
     private SerialisationManager sm;
 
-    public SaveFiles(GameContainer gc, GameManager gm, SerialisationManager sm) {
+    public SaveFiles(GameContainer gc, GameState gm, SerialisationManager sm) {
         this.gc = gc;
         this.gm = gm;
         this.sm = sm;
@@ -54,8 +54,8 @@ public class SaveFiles {
     private Object[] getPlayerData() {
 
         Object[] playerData = new Object[9];
-        playerData[0] = this.gm.player.getPosX();
-        playerData[1] = this.gm.player.getPosY();
+        playerData[0] = this.gm.player.position.getPosX();
+        playerData[1] = this.gm.player.position.getPosY();
         playerData[2] = this.gm.player.getOffX();
         playerData[3] = this.gm.player.getOffY();
         playerData[4] = this.gm.player.getTileX();

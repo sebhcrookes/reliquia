@@ -1,19 +1,34 @@
-package com.game.exe.engine;
+package com.game.engine.engine.util;
 
 public class EngineSettings {
 
-    private static String title = "game.exe";
-    private static int width = 512;
-    private static int height = 288;
-    private static float scale = 2.0f;
-    private static double updateCap = 1.0 / 60.0;
-    private static boolean debug = false;
-    private static boolean lockFPS = false;
+    /**
+     * EngineSettings class allows for simple modification to engine-related settings
+     */
+
+    private String title = "game.engine";
+    private int width = 512;
+    private int height = 288;
+    private float scale = 2.0f;
+    private double updateCap = 1.0 / 60.0;
+    private boolean debug = false;
+    private boolean lockFPS = false;
+
+    private String iconPath = null;
+    private String cursorPath = null;
 
     public EngineSettings() {}
 
-    public static String getTitle() {
+    public String getTitle() {
         return title;
+    }
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public String getCursorPath() {
+        return cursorPath;
     }
 
     public void setTitle(String title) {

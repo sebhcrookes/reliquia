@@ -1,12 +1,13 @@
 package com.game.exe.game.level;
 
 import com.game.exe.engine.GameContainer;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
+import com.game.exe.game.particles.ParticleComponent;
 import com.game.exe.game.particles.ParticleManager;
 
 public class LevelWeather {
 
-    private GameManager gm;
+    private GameState gm;
 
     public static final int CLEAR = 0;
     public static final int RAIN = 1;
@@ -16,7 +17,7 @@ public class LevelWeather {
     private String weatherType = "clear";
     private int bgParticle = 0;
 
-    public LevelWeather(GameContainer gc, GameManager gm, LevelManager lm) {
+    public LevelWeather(GameContainer gc, GameState gm, LevelManager lm) {
         this.gm = gm;
     }
 
@@ -36,12 +37,17 @@ public class LevelWeather {
         }
     }
 
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void setWeatherIntensity(int intensity) {
+        this.weatherIntensity = intensity;
+    }
+
+    public void update(GameContainer gc, GameState gm, float dt) {
         if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
             bgParticle = 0;
 
-            gm.pm.createParticle(weatherType,gm.random.generate((int)gm.camera.getOffX(), (int)gm.camera.getOffX() + gc.getWidth()), gm.camera.getOffY(), ParticleManager.WIND_STRONG);
+            gm.pm.createParticle(weatherType, gm.random.generate((int) gm.camera.getOffX(), (int) gm.camera.getOffX() + gc.getWidth()), gm.camera.getOffY(), new ParticleComponent[]{ParticleManager.WIND_STRONG, ParticleManager.COLLIDE});
         }
         bgParticle++;
     }
+
 }

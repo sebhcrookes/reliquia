@@ -3,7 +3,8 @@ package com.game.exe.game.entities;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
 import com.game.exe.engine.gfx.Image;
-import com.game.exe.game.GameManager;
+import com.game.exe.engine.position.Vector2;
+import com.game.exe.game.GameState;
 import com.game.exe.game.Sound;
 import com.game.exe.game.ui.UIManager;
 import com.game.exe.game.ui.UIObject;
@@ -36,8 +37,7 @@ public class Player extends GameObject {
         this.tag = "player";
         this.tileX = (int) posX;
         this.tileY = (int) posY;
-        this.posX = (int) (posX * GameManager.TS);
-        this.posY = (int) (posY * GameManager.TS);
+        this.position = new Vector2((int)(posX * GameState.TS), (int)(posY * GameState.TS));
         this.isItem = false;
         this.dashCooldown = this.DASH;
 
@@ -48,8 +48,7 @@ public class Player extends GameObject {
         this.tag = "player";
         this.tileX = (int) posX;
         this.tileY = (int) posY;
-        this.posX = (int) (posX * GameManager.TS);
-        this.posY = (int) (posY * GameManager.TS);
+        this.position = new Vector2((int)(posX * GameState.TS), (int)(posY * GameState.TS));
         this.offX = offX;
         this.offY = offY;
         this.isItem = false;
@@ -68,7 +67,7 @@ public class Player extends GameObject {
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
 
         this.physicsApply(this, gm, dt);
         //this.health.update(gc, gm, dt);
@@ -77,10 +76,10 @@ public class Player extends GameObject {
         //region Item Pickup
         for (int i = 0; i < gm.objects.size(); i++) {
             if (gm.objects.get(i).isItem) {
-                float objectX = gm.objects.get(i).getPosX();
-                float objectY = gm.objects.get(i).getPosY();
-                if (posX >= objectX - 16 && posX <= objectX + 16) {
-                    if (posY >= objectY - 16 && posY <= objectY + 16) {
+                float objectX = gm.objects.get(i).getPosition().getPosX();
+                float objectY = gm.objects.get(i).getPosition().getPosY();
+                if (position.getPosX() >= objectX - 16 && position.getPosX() <= objectX + 16) {
+                    if (position.getPosY() >= objectY - 16 && position.getPosY() <= objectY + 16) {
                         if (gm.inventory.canStore(gm.objects.get(i).tag)) {
                             if (gm.objects.get(i).customEntityData.getValue("PickupDelay") == null) {
                                 gm.objects.get(i).setDead(true);
@@ -155,7 +154,7 @@ public class Player extends GameObject {
         if (dashTime > 0) {
             dashTime--;
             if (dashTime % 4 == 0) {
-                gm.pm.createParticle("player", posX, posY);
+                gm.pm.createParticle("player", position.getPosX(), position.getPosY());
             }
         }
         if (dashTime == 0) {
@@ -172,7 +171,7 @@ public class Player extends GameObject {
                 if (!isSubmerged) {
                     sound.jumpSound.play();
                 }
-                gm.pm.createParticle("dust", posX + (playerImage.getW() >> 1), posY + playerImage.getH() - 3);
+                gm.pm.createParticle("dust", position.getPosX() + (playerImage.getWidth() >> 1), position.getPosY() + playerImage.getHeight() - 3);
                 this.fallDistance = -this.getJumpPower();
                 this.grounded = false;
             }
@@ -182,7 +181,7 @@ public class Player extends GameObject {
         //Shooting
         if (gc.getInput().isButtonDown(gm.controls.secondaryClick) && gm.inventory.itemSelected.equals("acidbottle")) {
             if (gm.inventory.hasItem("acidbottle")) {
-                gm.addObject(new Acid(posX + 8, posY, currentSprite));
+                gm.addObject(new Acid(position.getPosX() + 8, position.getPosY(), currentSprite));
                 gm.inventory.removeItem("acidbottle", 1);
 
             } else {
@@ -219,15 +218,15 @@ public class Player extends GameObject {
 
     @Override
     public void render(GameContainer gc, Renderer r) {
-        r.drawImage(playerImage, (int) this.posX, (int) this.posY);
+        r.drawImage(playerImage, (int) this.position.getPosX(), (int) this.position.getPosY());
         //r.drawLine((int)(mouseTileX),(int)(mouseTileY),(int)this.posX,(int)this.posY,0xffffffff);
     }
 
     public void setLocation(int posX, int posY) {
         this.tileX = posX;
         this.tileY = posY;
-        this.posX = posX * GameManager.TS;
-        this.posY = posY * GameManager.TS;
+        this.position.setPosX(posX * GameState.TS);
+        this.position.setPosY(posY * GameState.TS);
     }
 
     public void updateImage() {
@@ -272,20 +271,20 @@ class PlayerHealthUI extends UIObject {
     public PlayerHealthUI() { this.setTag("player_health"); }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
         this.health = gm.player.health.getHealth();
         if(!initialised) {
             healthUpdate();
             initialised = true;
         }
 
-        this.setPosX((gc.getWidth() - healthImage.getW()) >> 1);
-        this.setPosY((gc.getHeight() - healthImage.getH() + 5) - 6 + gm.cinematicCount);
+        this.setPosX((gc.getWidth() - healthImage.getWidth()) >> 1);
+        this.setPosY((gc.getHeight() - healthImage.getHeight() + 5) - 6 + gm.cinematicCount);
     }
 
     @Override
-    public void render(GameContainer gc, GameManager gm, Renderer r) {
-        r.drawImage(healthImage, (gc.getWidth() - healthImage.getW()) / 2, (gc.getHeight() - healthImage.getH() + 5) - 6 + gm.cinematicCount);
+    public void render(GameContainer gc, GameState gm, Renderer r) {
+        r.drawImage(healthImage, (gc.getWidth() - healthImage.getWidth()) / 2, (gc.getHeight() - healthImage.getHeight() + 5) - 6 + gm.cinematicCount);
     }
 
     public void healthUpdate() {

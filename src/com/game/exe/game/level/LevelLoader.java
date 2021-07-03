@@ -3,18 +3,18 @@ package com.game.exe.game.level;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.gfx.Image;
 import com.game.exe.engine.util.PropertiesFile;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 public class LevelLoader {
 
-    private GameManager gm;
+    private GameState gm;
     private LevelManager lm;
 
     private PropertiesFile levelP;
 
     public String mapBasePath = "/assets/maps/";
 
-    public LevelLoader(GameContainer gc, GameManager gm, LevelManager lm) {
+    public LevelLoader(GameContainer gc, GameState gm, LevelManager lm) {
         this.gm = gm;
         this.lm = lm;
     }
@@ -34,35 +34,35 @@ public class LevelLoader {
 
         try {
             levelImage = new Image(fileLocation);
-            int levelW = levelImage.getW();
-            int levelH = levelImage.getH();
+            int levelW = levelImage.getWidth();
+            int levelH = levelImage.getHeight();
 
             lm.levelW = levelW;
             lm.levelH = levelH;
 
             gm.setCollision(new String[levelW * levelH]);
-            for (int y = 0; y < levelImage.getH(); y++) {
-                for (int x = 0; x < levelImage.getW(); x++) {
-                    int currentBlock = x + y * levelImage.getW();
+            for (int y = 0; y < levelImage.getHeight(); y++) {
+                for (int x = 0; x < levelImage.getWidth(); x++) {
+                    int currentBlock = x + y * levelImage.getWidth();
 
                     for (int i = 0; i < gm.blocks.blockList.size(); i++) {
-                        if (levelImage.getP()[currentBlock] == gm.blocks.blockList.get(i).colourCode) {
+                        if (levelImage.getPixels()[currentBlock] == gm.blocks.blockList.get(i).colourCode) {
                             gm.setCollisionValue(gm.blocks.blockList.get(i).blockID, currentBlock);
                         }
                     }
-                    if (levelImage.getP()[currentBlock] == 0xffffff00) {
+                    if (levelImage.getPixels()[currentBlock] == 0xffffff00) {
                         gm.spawnX = x;
                         gm.spawnY = y;
                     }
                     //Adding tops to bamboo
                     if(gm.getCollisionValue(currentBlock) == "bamboostem") {
-                        if(gm.getCollisionValue(currentBlock - levelImage.getW()).equals("air")) {
+                        if(gm.getCollisionValue(currentBlock - levelImage.getWidth()).equals("air")) {
                             gm.setCollisionValue("bambooshoot", currentBlock);
                         }
                     }
                     //Water
                     if(gm.getCollisionValue(currentBlock) == "water") {
-                        if(gm.getCollisionValue(currentBlock - levelImage.getW()).equals("air")) {
+                        if(gm.getCollisionValue(currentBlock - levelImage.getWidth()).equals("air")) {
                             gm.setCollisionValue("watersurface", currentBlock);
                         }
                     }

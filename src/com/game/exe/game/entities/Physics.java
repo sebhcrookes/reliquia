@@ -1,6 +1,6 @@
 package com.game.exe.game.entities;
 
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 public class Physics {
 
@@ -31,7 +31,7 @@ public class Physics {
         this.isInitialised = true;
     }
 
-    public void physicsApply(GameObject obj, GameManager gm, float dt) {
+    public void physicsApply(GameObject obj, GameState gm, float dt) {
         if(!isInitialised) {
             return;
         }
@@ -58,26 +58,26 @@ public class Physics {
         //TODO: Water Physics
 
         // Final Position Calculation: Y
-        if(offY > GameManager.TS >> 1) {
+        if(offY > GameState.TS >> 1) {
             obj.tileY++;
-            offY -= GameManager.TS;
-        }else if(offY < -GameManager.TS >> 1) {
+            offY -= GameState.TS;
+        }else if(offY < -GameState.TS >> 1) {
             obj.tileY--;
-            offY += GameManager.TS;
+            offY += GameState.TS;
         }
 
         // Final Position Calculation: X
-        if(this.offX > GameManager.TS >> 1) {
-            this.offX -= GameManager.TS;
+        if(this.offX > GameState.TS >> 1) {
+            this.offX -= GameState.TS;
             obj.tileX++;
-        }else if(this.offX < -GameManager.TS >> 1) {
-            this.offX += GameManager.TS;
+        }else if(this.offX < -GameState.TS >> 1) {
+            this.offX += GameState.TS;
             obj.tileX--;
         }
 
         // Apply the changes
-        obj.posX = obj.tileX * GameManager.TS + this.offX;
-        obj.posY = obj.tileY * GameManager.TS + this.offY;
+        obj.getPosition().setPosX((int)(obj.tileX * GameState.TS + this.offX));
+        obj.getPosition().setPosY((int)(obj.tileY * GameState.TS + this.offY));
     }
 
     public void setGrounded(boolean grounded) {

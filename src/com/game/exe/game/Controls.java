@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Controls implements Serializable {
 
     private final GameContainer gc;
-    private final GameManager gm;
+    private final GameState gm;
 
     public int jump = KeyEvent.VK_SPACE;
     public int alternateJump = KeyEvent.VK_W;
@@ -23,12 +23,12 @@ public class Controls implements Serializable {
 
     private int varRadius = 0;
 
-    public Controls(GameContainer gc, GameManager gm) {
+    public Controls(GameContainer gc, GameState gm) {
         this.gc = gc;
         this.gm = gm;
     }
 
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
         if (varRadius != 0) {
             varRadius++;
         }

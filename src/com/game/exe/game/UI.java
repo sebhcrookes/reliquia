@@ -22,7 +22,7 @@ public class UI implements Serializable{
     private Sound sound = new Sound();
     private Image playerImage;
 
-    private GameManager gm;
+    private GameState gm;
 
     private int titleMaxY;
     private int menuY = 0;
@@ -37,20 +37,20 @@ public class UI implements Serializable{
 
     public int mouseTileX, mouseTileY;
 
-    public UI(GameManager gm) {
+    public UI(GameState gm) {
         this.gm = gm;
     }
 
-    public void init(GameManager gm, GameContainer gc) { if(initHasRun) { return; } else { initHasRun = true; }
+    public void init(GameState gm, GameContainer gc) { if(initHasRun) { return; } else { initHasRun = true; }
         playerImage = new Image("/assets/player/" + gm.player.colour + "/0.png");
-        titleMaxY = (gc.getHeight() / 2) - (gm.sprite.titleImage.getH() / 2);
-        menuX = (gc.getWidth() / 2) - (gm.sprite.titleImage.getW() / 2);
+        titleMaxY = (gc.getHeight() / 2) - (gm.sprite.titleImage.getHeight() / 2);
+        menuX = (gc.getWidth() / 2) - (gm.sprite.titleImage.getWidth() / 2);
 
-        playerMaxY = (titleMaxY - (gm.sprite.titleImage.getH() / 2)) - playerImage.getH() / 2;
-        menuPlayerX = (gc.getWidth() / 2) - (playerImage.getW() / 2);
+        playerMaxY = (titleMaxY - (gm.sprite.titleImage.getHeight() / 2)) - playerImage.getHeight() / 2;
+        menuPlayerX = (gc.getWidth() / 2) - (playerImage.getWidth() / 2);
     }
 
-    public void update(GameManager gm, GameContainer gc) {
+    public void update(GameState gm, GameContainer gc) {
         if(!initHasRun) { init(gm, gc); }
 
         try {
@@ -92,8 +92,8 @@ public class UI implements Serializable{
             lines[0] = "FPS: " + gc.getFps() + " ";
         }
 
-        mouseTileX = (int)(gc.getInput().getMouseX()+ gm.camera.getOffX()) / GameManager.TS;
-        mouseTileY = (int)(gc.getInput().getMouseY()+ gm.camera.getOffY()) / GameManager.TS;
+        mouseTileX = (int)(gc.getInput().getMouseX()+ gm.camera.getOffX()) / GameState.TS;
+        mouseTileY = (int)(gc.getInput().getMouseY()+ gm.camera.getOffY()) / GameState.TS;
     }
 
     public void render(Renderer r, GameContainer gc) {
@@ -102,7 +102,7 @@ public class UI implements Serializable{
 
         //Render Selection Box
         if(gm.getCollisionDetails(mouseTileX, mouseTileY) != null) {
-            r.drawImage(gm.sprite.selectedTile, mouseTileX * GameManager.TS, mouseTileY * GameManager.TS);
+            r.drawImage(gm.sprite.selectedTile, mouseTileX * GameState.TS, mouseTileY * GameState.TS);
             //if(gc.getInput().isButton(MouseEvent.BUTTON1)){
                 //gm.setBlock(mouseTileX, mouseTileY, "air");
             //}
@@ -152,7 +152,7 @@ public class UI implements Serializable{
 
     }
 
-    private void updateMenuPlayer(GameManager gm) {
+    private void updateMenuPlayer(GameState gm) {
         playerImage = new Image("/assets/player/" + gm.player.colour + "/0.png");
         sound.select.play();
     }

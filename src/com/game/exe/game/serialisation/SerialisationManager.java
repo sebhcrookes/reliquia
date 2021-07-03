@@ -1,19 +1,19 @@
 package com.game.exe.game.serialisation;
 
 import com.game.exe.engine.GameContainer;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 public class SerialisationManager {
 
     private GameContainer gc;
-    private GameManager gm;
+    private GameState gm;
 
     private SaveFiles sf;
     private LoadFiles lf;
 
     private String saveEnding = ".save";
 
-    public SerialisationManager(GameContainer gc, GameManager gm) {
+    public SerialisationManager(GameContainer gc, GameState gm) {
         this.gc = gc;
         this.gm = gm;
 

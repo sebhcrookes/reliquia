@@ -3,7 +3,7 @@ package com.game.exe.engine;
 import com.game.exe.engine.gfx.Image;
 import com.game.exe.engine.gfx.ImageRequest;
 import com.game.exe.engine.position.Vector2;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import com.game.exe.engine.gfx.Font;
 public class Renderer {
 
     private GameContainer gc;
-    private GameManager gm;
+    private GameState gm;
 
     private ArrayList<ImageRequest> imageRequest = new ArrayList<>();
 
@@ -40,7 +40,7 @@ public class Renderer {
     }
 
     public void clear() {
-        Arrays.fill(p, GameManager.AIR_COLOUR);
+        Arrays.fill(p, GameState.AIR_COLOUR);
     }
 
     public void process() {
@@ -116,9 +116,9 @@ public class Renderer {
         for(int i = 0; i < text.length(); i++) {
             int unicode = text.codePointAt(i);
 
-            for(int y = 0; y < font.getFontImage().getH(); y++) {
+            for(int y = 0; y < font.getFontImage().getHeight(); y++) {
                 for(int x = 0; x < font.getWidths()[unicode]; x++) {
-                    int pixelColour = font.getFontImage().getP()[x + font.getOffsets()[unicode] + y * font.getFontImage().getW()];
+                    int pixelColour = font.getFontImage().getPixels()[x + font.getOffsets()[unicode] + y * font.getFontImage().getWidth()];
                     if(pixelColour != 0xffff00ff && pixelColour != 0xff0000ff && pixelColour != 0xffffff00) {
                         setPixel(x + offX + offset, y + offY, colour);
                     }
@@ -147,12 +147,12 @@ public class Renderer {
 
         int newX = 0;
         int newY = 0;
-        int newWidth = image.getW();
-        int newHeight = image.getH();
+        int newWidth = image.getWidth();
+        int newHeight = image.getHeight();
 
         for(int y = newY; y < newHeight; y++) {
             for(int x = newX; x < newWidth; x++) {
-                setPixel(x + offX,y + offY, image.getP()[x + y * image.getW()]);
+                setPixel(x + offX,y + offY, image.getPixels()[x + y * image.getWidth()]);
             }
         }
     }
@@ -285,10 +285,9 @@ public class Renderer {
      */
     public int textLength(String text) {
         int offset = 0;
-        text = text.toUpperCase();
 
         for(int i = 0; i < text.length(); i++) {
-            int unicode = text.codePointAt(i) - 32;
+            int unicode = text.codePointAt(i);
             offset += font.getWidths()[unicode];
         }
         return offset;

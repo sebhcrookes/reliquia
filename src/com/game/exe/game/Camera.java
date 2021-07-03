@@ -11,15 +11,15 @@ public class Camera {
     private String targetTag;
     private GameObject target = null;
 
-    private GameManager gm;
+    private GameState gm;
     private GameContainer gc;
 
-    public Camera(GameManager gm, String tag) {
+    public Camera(GameState gm, String tag) {
         this.gm = gm;
         this.targetTag = tag;
     }
 
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
         if(target == null) {
             target = gm.getObject(targetTag);
         }
@@ -34,8 +34,8 @@ public class Camera {
             offX = offX + (gc.getWidth() / 16) / 10;
         }
 
-        int targetX = (int)((target.getPosX() + target.getWidth()/2) - gc.getWidth() / 2);
-        int targetY = (int)((target.getPosY() + target.getHeight()/2) - gc.getHeight() / 2);
+        int targetX = (int)((target.getPosition().getPosX() + target.getWidth()/2) - gc.getWidth() / 2);
+        int targetY = (int)((target.getPosition().getPosY() + target.getHeight()/2) - gc.getHeight() / 2);
 
         offX -= (dt * (offX - targetX) * 7);
         offY -= (dt * (offY - targetY) * 7);

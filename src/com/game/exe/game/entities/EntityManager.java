@@ -1,6 +1,6 @@
 package com.game.exe.game.entities;
 
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 import com.game.exe.game.entities.items.Item;
 import com.game.exe.game.entities.items.Items;
 import com.game.exe.game.entities.npc.Beth;
@@ -9,10 +9,10 @@ import java.io.Serializable;
 
 public class EntityManager implements Serializable {
 
-    private GameManager gm;
+    private GameState gm;
     public Items im;
 
-    public EntityManager(GameManager gm) {
+    public EntityManager(GameState gm) {
         this.gm = gm;
         im = new Items(gm);
     }
@@ -26,7 +26,7 @@ public class EntityManager implements Serializable {
         return;
     }
 
-    public void summonMob(GameManager gm, String mobName, float posX, float posY) {
+    public void summonMob(GameState gm, String mobName, float posX, float posY) {
         if(mobName == "panda") {
             gm.objects.add(new Panda(posX, posY));
         }

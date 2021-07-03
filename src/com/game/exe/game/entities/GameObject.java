@@ -2,20 +2,20 @@ package com.game.exe.game.entities;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.engine.position.Vector2;
+import com.game.exe.game.GameState;
 
 public abstract class GameObject extends Physics {
 
     protected String tag;
-    public float posX;
-    public float posY;
+    public Vector2 position;
     protected int width, height;
     protected boolean dead = false;
     protected boolean isItem = false;
     protected CustomEntityData customEntityData = new CustomEntityData();
     protected int tileX, tileY;
 
-    public abstract void update(GameContainer gc, GameManager gm, float dt);
+    public abstract void update(GameContainer gc, GameState gm, float dt);
     public abstract void render(GameContainer gc, Renderer r);
 
     public String getTag() {
@@ -26,20 +26,8 @@ public abstract class GameObject extends Physics {
         this.tag = tag;
     }
 
-    public float getPosX() {
-        return posX;
-    }
-
-    public void setPosX(float posX) {
-        this.posX = posX;
-    }
-
-    public float getPosY() {
-        return posY;
-    }
-
-    public void setPosY(float posY) {
-        this.posY = posY;
+    public Vector2 getPosition() {
+        return position;
     }
 
     public int getWidth() {

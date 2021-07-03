@@ -1,7 +1,7 @@
 package com.game.exe.game.blocks;
 
 import com.game.exe.engine.GameContainer;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ public class BlockUpdate implements Serializable {
     private boolean inWater = false;
 
 
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
 
         blockUnderPlayer = gm.getCollisionDetails(gm.player.getTileX(), gm.player.getTileY() + 1);
         playerBlock = gm.getCollisionDetails(gm.player.getTileX(), gm.player.getTileY());

@@ -2,13 +2,14 @@ package com.game.exe.game.entities.items;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.engine.position.Vector2;
+import com.game.exe.game.GameState;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.engine.gfx.Image;
 
 import java.io.Serializable;
 
-import static com.game.exe.game.GameManager.TS;
+import static com.game.exe.game.GameState.TS;
 
 public class Item extends GameObject implements Serializable {
 
@@ -32,8 +33,7 @@ public class Item extends GameObject implements Serializable {
     public Item(String itemID, float posX, float posY, Image sprite, boolean isItem, String fontPlaceholder, float velX, float velY) {
         this.tag = itemID;
         this.itemID = itemID;
-        this.posX = posX;
-        this.posY = posY;
+        this.position = new Vector2((int)posX, (int)posY);
         this.itemImage = sprite;
         this.tileX = (int)posX;
         this.tileY = (int)posY;
@@ -48,7 +48,7 @@ public class Item extends GameObject implements Serializable {
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
 
         tempOffX = (int) offX;
         int tempTileX = tileX;
@@ -81,7 +81,7 @@ public class Item extends GameObject implements Serializable {
             }
         }
 
-        if(gm.getCollision((int) posX / gm.TS, (int) posY / 16 - 1)) { grounded = true; }
+        if(gm.getCollision((int) position.getPosX() / gm.TS, (int) position.getPosY() / 16 - 1)) { grounded = true; }
         else { grounded = false; }
 
         fallDistance += dt * fallSpeed;
@@ -105,9 +105,9 @@ public class Item extends GameObject implements Serializable {
         if(grounded) {
             groundedAnimCount++;
             if(groundedAnimCount < 60 && groundedAnimCount >= 0)
-                offY = TS - (2 + itemImage.getH()) + 1;
+                offY = TS - (2 + itemImage.getHeight()) + 1;
             if(groundedAnimCount <= 119 && groundedAnimCount >= 60)
-                offY = TS - (2 + itemImage.getH());
+                offY = TS - (2 + itemImage.getHeight());
             if(groundedAnimCount == 119)
                 groundedAnimCount = 0;
         }
@@ -134,13 +134,13 @@ public class Item extends GameObject implements Serializable {
             offX += TS;
         }
 
-        posX = tileX * TS + offX;
-        posY = tileY * TS + offY;
+        position.setPosX((int)(tileX * TS + offX));
+        position.setPosY((int)(tileY * TS + offY));
         //End of Final Position Calculation
     }
 
     @Override
     public void render(GameContainer gc, Renderer r) {
-        r.drawImage(itemImage, (int) (posX), (int) (posY));
+        r.drawImage(itemImage, (int) (position.getPosX()), (int) (position.getPosY()));
     }
 }

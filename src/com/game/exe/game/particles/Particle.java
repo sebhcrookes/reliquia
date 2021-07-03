@@ -2,7 +2,7 @@ package com.game.exe.game.particles;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
-import com.game.exe.game.GameManager;
+import com.game.exe.game.GameState;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.engine.gfx.Image;
 
@@ -30,7 +30,7 @@ public class Particle extends GameObject {
     }
 
     @Override
-    public void update(GameContainer gc, GameManager gm, float dt) {
+    public void update(GameContainer gc, GameState gm, float dt) {
         existenceTime--; //Subtract from existenceTime
         posY+=fallSpeed; //Fall
 
@@ -42,8 +42,8 @@ public class Particle extends GameObject {
                 break;
             case 2: //Fade Decay, alpha gets reduced to 0
                 try {
-                    for (int i = 0; i < image.getW() * image.getH(); i++) {
-                        int pixel = image.getSingleP(i);
+                    for (int i = 0; i < image.getWidth() * image.getHeight(); i++) {
+                        int pixel = image.getP(i);
                         int alpha = ((pixel >> 24) & 0xff);
 
                         alpha -= alpha / existenceTime;
