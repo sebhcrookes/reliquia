@@ -7,13 +7,28 @@ import com.game.exe.game.entities.GameObject;
 
 public class ParticleManager {
 
-    public static final int PERMANENT = Integer.MAX_VALUE;
-    public static final int AUTOMATIC = 0;
+    public static final ParticleComponent NONE = new ParticleComponent() {
+        @Override
+        public void update(Particle p, GameContainer gc, GameManager gm, float dt) {}
+    };
 
-    private static final int NONE = 0;
+    public static final ParticleComponent COLLIDE = new ParticleComponent() {
+        @Override
+        public void update(Particle p, GameContainer gc, GameManager gm, float dt) {
+            if(gm.getParticleCollision((int)p.posX / GameManager.TS, (int)p.posY / GameManager.TS)) {
+                p.setDead(true);
+            }
+        }
+    };
+
     public static final int WIND_LIGHT = 1;
     public static final int WIND_MEDIUM = 2;
-    public static final int WIND_STRONG = 3;
+    public static final ParticleComponent WIND_STRONG = new ParticleComponent() {
+        @Override
+        public void update(Particle p, GameContainer gc, GameManager gm, float dt) {
+            p.posX -= 2;
+        }
+    };
 
     private GameObject[] particles;
     private GameManager gm;
@@ -43,23 +58,23 @@ public class ParticleManager {
         }
     }
 
-    public void createParticle(String type, float posX, float posY, int component) {
+    public void createParticle(String type, float posX, float posY, ParticleComponent[] component) {
         internalParticle(type,posX,posY,component);
     }
 
     public void createParticle(String type, float posX, float posY) {
-        internalParticle(type,posX,posY,NONE);
+        internalParticle(type,posX,posY,new ParticleComponent[]{NONE});
     }
 
-    private void internalParticle(String type, float posX, float posY, int component) {
+    private void internalParticle(String type, float posX, float posY, ParticleComponent[] component) {
         for(int i = 0; i < particles.length; i++) {
             if(particles[i] == null) {
                 switch(type) {
                     case "dust":
-                        particles[i] = new Particle(posX, posY, gm.sprite.dustImage.getPath(), 50, 2, component);
+                        particles[i] = new Particle(posX, posY, gm.sprite.dustImage.getPath(), 50, 2, 0, component);
                         break;
                     case "player":
-                        particles[i] = new Particle(posX, posY, gm.player.playerImage.getPath(), 40, 2, component);
+                        particles[i] = new Particle(posX, posY, gm.player.playerImage.getPath(), 40, 2, 0, component);
                         break;
                     case "rain":
                         particles[i] = new Particle(posX, posY, gm.sprite.rainImage.getPath(), 100, 1,3, component);

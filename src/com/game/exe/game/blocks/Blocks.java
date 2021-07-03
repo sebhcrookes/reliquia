@@ -29,5 +29,19 @@ public class Blocks implements Serializable {
         blockList.add(new Block("/assets/blocks/environment/rock.png", "rock", 0xffa0958c,13, false));
         blockList.add(new Block("/assets/blocks/water.png", "water", 0xff00a8f3,14, false));
         blockList.add(new Block("/assets/blocks/watersurface.png", "watersurface", 0,15, false));
+
+        // Mountain
+        blockList.add(new Block("/assets/blocks/mountainous/rock_wall.png", "rock_wall", 0xffaba098,16, false));
+        blockList.add(new Block("/assets/blocks/mountainous/left_rock_wall.png", "left_rock_wall", 0xffab9898, 16, false));
+        blockList.add(new Block("/assets/blocks/mountainous/right_rock_wall.png", "right_rock_wall", 0xffa9ab98, 16, false));
+
+        blockList.add(new Block("/assets/blocks/mountainous/snowy_ground.png", "snowy_ground", 0xffdedede,17, true));
+        blockList.add(new BlockVariant("/assets/blocks/mountainous/snowy_ground_left.png", "snowy_ground_left", 17, true));
+        blockList.add(new BlockVariant("/assets/blocks/mountainous/snowy_ground_right.png", "snowy_ground_right", 17, true));
+        blockList.add(new Block("/assets/blocks/mountainous/ground.png", "ground", 0xff615954,18, true));
+
+
+
+
     }
 }

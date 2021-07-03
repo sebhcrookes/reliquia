@@ -3,113 +3,44 @@ package com.game.exe.game;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
 import com.game.exe.engine.gfx.Image;
-import com.game.exe.game.ui.UICustomRender;
+import com.game.exe.game.ui.UIManager;
 import com.game.exe.game.ui.UIObject;
 
-import java.io.Serializable;
-
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
+import java.util.Arrays;
 
-public class Inventory implements Serializable{
+public class Inventory implements Serializable {
 
-    public int maxHealth = 10;
-    public int health = 10;
-    private Image healthImage;
-
-    private int maxItems = 32;
-
-    private int inventorySlotWidth = 9;
-    private int inventorySlotHeight = 9;
     public int inventorySlots = 6;
-
     public int selectedSlot = 1;
     public String itemSelected = "";
-
-    private GameManager gm;
-
-    private Image inventory = new Image("/assets/ui/inventory.png");
-
     public String[] items;
     public int[] itemCount;
+    private final int MAX_ITEMS = 32;
+    private final int SLOT_WIDTH = 9;
+    private final int SLOT_HEIGHT = 9;
+    private final GameManager gm;
 
     public Inventory(GameManager gm) {
         this.gm = gm;
-        healthUpdate();
 
-        gm.um.addUIOverlay("inventory", new Image("/assets/ui/inventory.png"), 0, 0, new UICustomRender() {
-            @Override
-            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {
-                uiObject.setPosX((gc.getWidth() - uiObject.getImage().getW()) >> 1);
-                uiObject.setPosY((gc.getHeight() - uiObject.getImage().getH()) - (6 + gm.cinematicCount));
-            }
+        items = new String[inventorySlots];
+        itemCount = new int[inventorySlots];
 
-            @Override
-            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
-                r.drawImage(uiObject.getImage(), (int)uiObject.getPosX(), (int)uiObject.getPosY());
-                System.out.println("epic");
-            }
-        });
+        Arrays.fill(items, "");
+        Arrays.fill(itemCount, 0);
 
-        gm.um.addUIOverlay("inventorySelector", null, 0, 0, new UICustomRender() {
-            @Override
-            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {}
-
-            @Override
-            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
-                r.drawRect((gc.getWidth() - inventory.getW()) / 2 + (selectedSlot-1) * (inventorySlotWidth + 1),
-                        (gc.getHeight() - inventory.getH()) - 6 + gm.cinematicCount,
-                        inventorySlotWidth + 1,
-                        inventorySlotHeight + 1,
-                        0xffffffff);
-            }
-        });
-
-        gm.um.addUIOverlay("inventoryText", null, 0, 0, new UICustomRender() {
-            @Override
-            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {}
-
-            @Override
-            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
-                for(int i = 0; i < items.length; i++) {
-                    if(itemCount[i] != 0) {
-                        r.drawText(String.valueOf(itemCount[i]),
-                                (gc.getWidth() - inventory.getW()) / 2 + (i * (inventorySlotWidth + 1) + 1),
-                                ((gc.getHeight() - 1) - inventorySlotHeight * 2) - 6 + gm.cinematicCount,
-                                0xffffffff);
-                    }
-                }
-            }
-        });
-
-        gm.um.addUIOverlay("inventoryImages", null, 0, 0, new UICustomRender() {
-            @Override
-            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {
-
-            }
-
-            @Override
-            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
-                for(int i = 0; i < items.length; i++) {
-                    if(items[i] != "" && items[i] != null) {
-
-                        for(int n = 0; n < gm.entities.im.itemList.length; n++) {
-                            if(items[i].equals(gm.entities.im.itemList[n].itemID)) {
-                                r.drawImage(gm.entities.im.itemList[n].itemImage,
-                                        (gc.getWidth() - inventory.getW()) / 2 + (int)((i * (inventorySlotWidth + 1)) + 1) + ((inventorySlotWidth - gm.entities.im.itemList[n].itemImage.getW()) / 2),
-                                        ((gc.getHeight() - 1) - (inventorySlotHeight + gm.entities.im.itemList[n].itemImage.getH()) / 2) - (6 + gm.cinematicCount));
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        InventoryUI inventoryUI = new InventoryUI();
+        UIManager.addUIObject(inventoryUI);
     }
 
     public void update(GameManager gm, GameContainer gc) {
-        if(items == null) {
+
+        if (items == null) {
             items = new String[inventorySlots];
             itemCount = new int[inventorySlots];
-            for(int i = 0; i < items.length; i++) {
+            for (int i = 0; i < items.length; i++) {
                 items[i] = "";
                 itemCount[i] = 0;
             }
@@ -117,22 +48,24 @@ public class Inventory implements Serializable{
 
         itemSelected = items[selectedSlot - 1];
 
-        if(gc.getInput().isKeyDown(gm.controls.drop)) {
-            if(itemCount[selectedSlot - 1] > 0) {
+        if (gc.getInput().isKeyDown(gm.controls.drop)) {
+            if (itemCount[selectedSlot - 1] > 0) {
                 String item = items[selectedSlot - 1];
                 int direction = 0;
-                if(gm.player.facing == "right") { direction = 4; }
-                if(gm.player.facing == "left") { direction = -4; }
-                gm.entities.summonItem(item, gm.player.getTileX(), gm.player.getTileY(), direction, -2);
+                if (gm.player.facing.equals("right")) {
+                    direction = 4;
+                }
+                if (gm.player.facing.equals("left")) {
+                    direction = -4;
+                }
+                gm.em.summonItem(item, gm.player.getTileX(), gm.player.getTileY(), direction, -2);
                 gm.player.sound.dropSound.play();
                 removeItem(items[selectedSlot - 1], 1);
 
             }
         }
 
-        if(health < 0) { health = 0; }
-
-        if(gm.controls.allowControls) {
+        if (gm.controls.allowControls) {
             if (gc.getInput().isKey(KeyEvent.VK_1)) {
                 selectedSlot = 1;
             } else if (gc.getInput().isKey(KeyEvent.VK_2)) {
@@ -147,34 +80,16 @@ public class Inventory implements Serializable{
                 selectedSlot = 6;
             }
         }
-
-        if(gc.getInput().isKeyDown(KeyEvent.VK_LEFT)) {
-            health--;
-            healthUpdate();
-        }
-        if(gc.getInput().isKeyDown(KeyEvent.VK_RIGHT)) {
-            health++;
-            healthUpdate();
-        }
-
     }
 
-    public void render(Renderer r, GameContainer gc) {
-        r.setCamX(0);
-        r.setCamY(0);
-
-        int offX = (gc.getWidth() - inventory.getW()) / 2;
-        int offY = 6 + gm.cinematicCount;
-
-        r.drawImage(healthImage, (gc.getWidth() - healthImage.getW()) / 2, (gc.getHeight() - healthImage.getH() + 5) - offY);
-    }
+    public void render(Renderer r, GameContainer gc) {}
 
     public void pickup(String item) {
 
-        for(int i = 0; i < items.length; i++) {
+        for (int i = 0; i < items.length; i++) {
             try {
                 if (items[i].equals(item)) {
-                    if (itemCount[i] >= maxItems) {
+                    if (itemCount[i] >= MAX_ITEMS) {
                         continue;
                     } else {
                         itemCount[i]++;
@@ -182,11 +97,12 @@ public class Inventory implements Serializable{
                         return;
                     }
                 }
-            }catch(Exception e) {}
-            if(items[i].isEmpty() || items[i] == null) {
-                if(itemCount[i] >= maxItems) {
+            } catch (Exception ignored) {
+            }
+            if (items[i].isEmpty() || items[i] == null) {
+                if (itemCount[i] >= MAX_ITEMS) {
                     return;
-                }else {
+                } else {
                     items[i] = item;
                     itemCount[i]++;
                     gm.player.sound.pickupSound.play();
@@ -197,10 +113,10 @@ public class Inventory implements Serializable{
     }
 
     public void removeItem(String itemType, int count) {
-        for(int i = 0; i < items.length; i++) {
-            if(items[i].equals(itemType)) {
+        for (int i = 0; i < items.length; i++) {
+            if (items[i].equals(itemType)) {
                 itemCount[i] = itemCount[i] - count;
-                if(itemCount[i] == 0) {
+                if (itemCount[i] == 0) {
                     items[i] = "";
                 }
                 return;
@@ -209,8 +125,8 @@ public class Inventory implements Serializable{
     }
 
     public boolean hasItem(String itemType) {
-        for(int i = 0; i < items.length; i++) {
-            if(items[i].equals(itemType)) {
+        for (int i = 0; i < items.length; i++) {
+            if (items[i].equals(itemType)) {
                 return true;
             }
         }
@@ -218,20 +134,12 @@ public class Inventory implements Serializable{
     }
 
     public boolean canStore(String itemType) {
-        for(int i = 0; i < items.length; i++) {
-            if(items[i] == itemType) {
-                if(itemCount[i] >= maxItems) {
-                    return false;
-                }else{ return true; }
+        for (int i = 0; i < items.length; i++) {
+            if (items[i].equals(itemType)) {
+                return itemCount[i] < MAX_ITEMS;
             }
         }
         return true;
-    }
-
-    public void healthUpdate() {
-        try {
-            healthImage = new Image("/assets/ui/health/" + health + ".png");
-        }catch(Exception e) {}
     }
 
     public int getSelectedSlot() {
@@ -242,7 +150,64 @@ public class Inventory implements Serializable{
         this.selectedSlot = selectedSlot;
     }
 
-    public void playSound(String soundName) {
-        return;
+    public int getSlotWidth() { return this.SLOT_WIDTH; }
+
+    public int getSlotHeight() { return this.SLOT_HEIGHT; }
+}
+
+/**
+ * game.exe: Inventory UI class
+ * Contains all UI-related inventory things
+ */
+class InventoryUI extends UIObject {
+
+    private Image inventory = new Image("/assets/ui/inventory.png");
+
+    public InventoryUI() {
+        this.setTag("inventory");
+    }
+
+    @Override
+    public void update(GameContainer gc, GameManager gm, float dt) {
+        this.setPosX((gc.getWidth() - inventory.getW()) >> 1);
+        this.setPosY((gc.getHeight() - inventory.getH()) - (6 + gm.cinematicCount));
+    }
+
+    @Override
+    public void render(GameContainer gc, GameManager gm, Renderer r) {
+
+        // Inventory Outline
+        r.drawImage(inventory, (int) this.getPosX(), (int) this.getPosY());
+
+        // Inventory Slot Selector
+        r.drawRect((gc.getWidth() - inventory.getW()) / 2 + (gm.inventory.getSelectedSlot() - 1) * (gm.inventory.getSlotWidth() + 1),
+                (gc.getHeight() - inventory.getH()) - 6 + gm.cinematicCount,
+                gm.inventory.getSlotWidth() + 1,
+                gm.inventory.getSlotHeight() + 1,
+                0xffffffff);
+
+        // Item Text
+        for (int i = 0; i < gm.inventory.items.length; i++) {
+            if (gm.inventory.itemCount[i] != 0) {
+                r.drawText(String.valueOf(gm.inventory.itemCount[i]),
+                        (gc.getWidth() - inventory.getW()) / 2 + (i * (gm.inventory.getSlotWidth() + 1) + 1),
+                        ((gc.getHeight() - 1) - gm.inventory.getSlotHeight() * 2) - 6 + gm.cinematicCount,
+                        0xffffffff);
+            }
+        }
+
+        // Images
+        for (int i = 0; i < gm.inventory.items.length; i++) {
+            if (gm.inventory.items[i] != "" && gm.inventory.items[i] != null) {
+
+                for (int n = 0; n < gm.em.im.itemList.length; n++) {
+                    if (gm.inventory.items[i].equals(gm.em.im.itemList[n].itemID)) {
+                        r.drawImage(gm.em.im.itemList[n].itemImage,
+                                (gc.getWidth() - inventory.getW()) / 2 + (i * (gm.inventory.getSlotWidth() + 1)) + 1 + ((gm.inventory.getSlotWidth() - gm.em.im.itemList[n].itemImage.getW()) / 2),
+                                ((gc.getHeight() - 1) - (gm.inventory.getSlotHeight() + gm.em.im.itemList[n].itemImage.getH()) / 2) - (6 + gm.cinematicCount));
+                    }
+                }
+            }
+        }
     }
 }

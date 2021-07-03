@@ -23,11 +23,9 @@ public class BlockUpdate implements Serializable {
 
         //Portal Block
         if (playerBlock == gm.getBlockIDFromNumber(7)) {
-            if((gm.levelAmount - 1) > gm.levelNumber) {
-                gm.levelNumber++;
-                gm.lm.getLevelLoader().load(gm.levelNumber);
-                gm.player.setLocation(gm.spawnX, gm.spawnY);
-            }
+            gm.lm.incrementLevelNumber();
+            gm.lm.getLevelLoader().load(gm.lm.getLevelNumber());
+            gm.player.setLocation(gm.spawnX, gm.spawnY);
         }
 
         //Barrels
@@ -35,9 +33,9 @@ public class BlockUpdate implements Serializable {
             if(gc.getInput().isButtonDown(gm.controls.mainClick)) {
                 gm.setBlock(gm.ui.mouseTileX, gm.ui.mouseTileY, "air");
 
-                gm.entities.summonItem("heartfragment", gm.ui.mouseTileX + gm.random.generate(-2,2), gm.ui.mouseTileY - 1, 0, -2);
-                gm.entities.summonItem("acidbottle", gm.ui.mouseTileX + gm.random.generate(-2,2), gm.ui.mouseTileY - 1, 0, -2);
-                gm.entities.summonItem("coin", gm.ui.mouseTileX + gm.random.generate(-2,2), gm.ui.mouseTileY - 1, 0, -2);
+                gm.em.summonItem("heartfragment", gm.ui.mouseTileX + gm.random.generate(-2,2), gm.ui.mouseTileY - 1, 0, -2);
+                gm.em.summonItem("acidbottle", gm.ui.mouseTileX + gm.random.generate(-2,2), gm.ui.mouseTileY - 1, 0, -2);
+                gm.em.summonItem("coin", gm.ui.mouseTileX + gm.random.generate(-2,2), gm.ui.mouseTileY - 1, 0, -2);
             }
         }
     }

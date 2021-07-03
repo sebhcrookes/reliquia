@@ -38,14 +38,14 @@ public class Beth extends GameObject {
         resultantConversation = "Hello, how are you?";
 
         int speed = 100;
-        this.init(this, speed);
+        this.physicsInit(this, speed);
 
     }
 
     @Override
     public void update(GameContainer gc, GameManager gm, float dt) {
 
-        this.apply(this, gm, dt);
+        this.physicsApply(this, gm, dt);
 
         if(gm.player.posX <= this.posX) {
             if(bethImage != leftImage) {

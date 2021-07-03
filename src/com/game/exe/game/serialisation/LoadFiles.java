@@ -44,7 +44,7 @@ public class LoadFiles {
             this.gm.loadingSucceeded = true;
 
             Logger.log(Logger.INFO, "Loaded game successfully");
-        }catch(Exception e) { Logger.log(Logger.ERROR, "Failed to load game"); e.printStackTrace();}
+        }catch(Exception e) { Logger.log(Logger.ERROR, "Failed to load game"); }
     }
 
     /**
@@ -68,8 +68,11 @@ public class LoadFiles {
     }
 
     private void loadInventoryData(Object[] inventoryData) {
-        this.gm.inventory.items = (String[]) inventoryData[0];
-        this.gm.inventory.itemCount = (int[]) inventoryData[1];
+        if(inventoryData[0] != null) {
+            this.gm.inventory.items = (String[]) inventoryData[0];
+            this.gm.inventory.itemCount = (int[]) inventoryData[1];
+            this.gm.inventory.setSelectedSlot((int)(inventoryData[2]));
+        }
     }
 
     private void loadGameData(Object[] tempGameData) {
@@ -79,7 +82,7 @@ public class LoadFiles {
             gameData[i] = String.valueOf(tempGameData[i]);
         }
 
-        this.gm.levelNumber = Integer.parseInt(gameData[0]);
+        this.gm.lm.setLevelNumber(Integer.parseInt(gameData[0]));
     }
 
 }

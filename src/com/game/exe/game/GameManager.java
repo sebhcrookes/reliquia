@@ -6,15 +6,13 @@ import com.game.exe.engine.Renderer;
 import com.game.exe.engine.gfx.Image;
 import com.game.exe.game.background.Backgrounds;
 import com.game.exe.game.blocks.*;
-import com.game.exe.game.entities.Entities;
+import com.game.exe.game.entities.EntityManager;
 import com.game.exe.game.entities.GameObject;
 import com.game.exe.game.entities.Player;
 import com.game.exe.game.level.LevelManager;
 import com.game.exe.game.particles.ParticleManager;
 import com.game.exe.game.serialisation.SerialisationManager;
-import com.game.exe.game.ui.UICustomRender;
 import com.game.exe.game.ui.UIManager;
-import com.game.exe.game.ui.UIObject;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -38,25 +36,21 @@ public class GameManager extends AbstractGame implements Serializable {
     public Inventory inventory;
     public UI ui = new UI(this);
     public Blocks blocks = new Blocks();
-    public Entities entities;
+    public EntityManager em;
     public Random random = new Random();
     public BlockUpdate updater = new BlockUpdate();
-    public Controls controls = new Controls();
     public Backgrounds backgrounds = new Backgrounds(this);
     public ParticleManager pm = new ParticleManager(this);
     public UIManager um = new UIManager(this);
 
+    public UIManager um;
     public LevelManager lm;
     public SerialisationManager sm;
+    public Controls controls;
 
-    public int levelAmount = 2;
-    public int levelNumber = 0;
+    //public int levelNumber = 0;
     public String mapBasePath = "/assets/maps/";
     public int spawnX, spawnY;
-
-    private int bgParticle = 0;
-    private int weatherIntensity = 0;
-    private String weatherType = "clear";
 
     public int sizeX = 512; //500
     public int sizeY = 288; //375
@@ -69,39 +63,29 @@ public class GameManager extends AbstractGame implements Serializable {
 
     public boolean loadingSucceeded = false;
 
-    public GameManager(){
+    public GameManager() {
 
         lm = new LevelManager(gc,this);
         sm = new SerialisationManager(gc, this);
 
-        um.addUIOverlay("epic", new Image("/assets/blocks/barrel.png"), 0, 0, new UICustomRender() {
-            @Override
-            public void update(GameContainer gc, GameManager gm, float dt, UIObject uiObject) {
-                uiObject.setPosX(0);
-                uiObject.setPosY(0);
-            }
+        controls = new Controls(gc, this);
+        um = new UIManager(gc, this);
 
-            @Override
-            public void render(GameContainer gc, GameManager gm, Renderer r, UIObject uiObject) {
-                r.drawImage(uiObject.getImage(), (int)uiObject.getPosX(), (int)uiObject.getPosY());
-            }
-        });
-
-        entities = new Entities(this);
+        em = new EntityManager(this);
         inventory = new Inventory(this);
         blocks.initialise();
-        lm.getLevelLoader().load(this.levelNumber);
 
         try{
+            sm.createFolders();
             sm.loadGame();
         } catch (Exception ignored) {}
+
+        lm.getLevelLoader().load(lm.getLevelNumber());
 
         if(!loadingSucceeded) {
             player = new Player(spawnX, spawnY);
         }
         objects.add(player);
-
-        //entities.summonMob(this,"beth", player.getTileX(), player.getTileY());
     }
 
     @Override
@@ -125,13 +109,6 @@ public class GameManager extends AbstractGame implements Serializable {
         lm.update(gc,this,dt);
         um.update(gc,this,dt);
 
-        if(bgParticle >= weatherIntensity && weatherIntensity != 0) {
-            bgParticle = 0;
-
-            pm.createParticle(weatherType,random.generate((int)camera.getOffX(), (int)camera.getOffX() + gc.getWidth()), camera.getOffY(), ParticleManager.AUTOMATIC);
-        }
-        bgParticle++;
-
         if(gc.getInput().isKeyDown(KeyEvent.VK_F)) {
             toggleBars();
         }
@@ -154,6 +131,7 @@ public class GameManager extends AbstractGame implements Serializable {
                 i--;
             }
         }
+        controls.update(gc, this, dt);
         camera.update(gc, this, dt);
     }
 
@@ -191,6 +169,7 @@ public class GameManager extends AbstractGame implements Serializable {
             r.drawFillRect((int)r.getCamX(),(int)r.getCamY(), gc.getWidth(), cinematicCount, 0xff000000);
             r.drawFillRect((int)r.getCamX(),(int)r.getCamY() + gc.getHeight() - cinematicCount, gc.getWidth(), cinematicCount, 0xff000000);
         }
+        controls.render(gc,r);
         ui.render(r, gc);
         um.render(gc, r);
     }
@@ -231,15 +210,27 @@ public class GameManager extends AbstractGame implements Serializable {
         return false;
     }
 
+    public boolean getParticleCollision(int x, int y) {
+        if (x < 0 || x >= lm.getLevelW() || y < 0 || y >= lm.getLevelH())
+            return false;
+        int blockToTest = x + y * lm.getLevelW();
+        if (collision[blockToTest] != getBlockIDFromNumber(0)) {
+            for (int i = 0; i < blocks.blockList.size(); i++) {
+                if (blocks.blockList.get(i).blockID == collision[blockToTest]) {
+                    return blocks.blockList.get(i).doesCollide;
+                }
+            }
+        }
+        return false;
+    }
+
     public String getCollisionDetails(int x, int y) {
         int blockToTest = x + y * lm.getLevelW();
         try {
             if (collision[blockToTest] != getBlockIDFromNumber(0)) {
                 return collision[blockToTest];
             }
-        } catch(ArrayIndexOutOfBoundsException e) {
-            this.levelNumber = 0;
-        }
+        } catch(ArrayIndexOutOfBoundsException e) {}
         return null;
     }
 
@@ -316,7 +307,9 @@ public class GameManager extends AbstractGame implements Serializable {
     }
 
     public String getCollisionValue(int position) {
-        return this.collision[position];
+        try {
+            return this.collision[position];
+        }catch(Exception e) { return "air"; }
     }
 
     public float distanceBetween(float a, float b) {

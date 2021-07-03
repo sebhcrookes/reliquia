@@ -1,7 +1,6 @@
 package com.game.exe.game;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class GameLauncher {
 

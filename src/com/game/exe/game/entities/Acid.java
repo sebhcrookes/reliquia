@@ -30,7 +30,7 @@ public class Acid extends GameObject implements Serializable {
         physics.offY = (int) posY % TS - (TS);
 
         int speed = 300;
-        physics.init(this, speed);
+        physics.physicsInit(this, speed);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Acid extends GameObject implements Serializable {
             case 1: physics.offX -= physics.getSpeed() * dt; physics.offY -= (physics.getSpeed() * dt) / 2; break;
         }
 
-        physics.apply(this, gm, dt);
+        physics.physicsApply(this, gm, dt);
 
         if(gm.getCollision(tileX,tileY)) {
             this.dead = true;

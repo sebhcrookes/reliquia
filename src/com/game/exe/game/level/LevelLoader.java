@@ -68,27 +68,55 @@ public class LevelLoader {
                     }
 
                     //region Grass Block
-                    if(gm.getCollisionFromID(gm.getCollisionValue(currentBlock)) && gm.getCollisionValue(currentBlock - 1).equals("grassblockright")) {
-                        gm.setCollisionValue("grassblock", currentBlock - 1);
-                    }
-                    if(gm.getCollisionValue(currentBlock) == "grassblock") {
-                        for(int n = 0; n < gm.blocks.blockList.size(); n++) {
-                            if(gm.blocks.blockList.get(n).blockID.equals(gm.getCollisionValue(currentBlock - 1))) {
-                                if(!gm.blocks.blockList.get(n).doesCollide) {
-                                    gm.setCollisionValue("grassblockleft", currentBlock);
+                    try {
+                        if (gm.getCollisionFromID(gm.getCollisionValue(currentBlock)) && gm.getCollisionValue(currentBlock - 1).equals("grassblockright")) {
+                            gm.setCollisionValue("grassblock", currentBlock - 1);
+                        }
+                        if (gm.getCollisionValue(currentBlock) == "grassblock") {
+                            for (int n = 0; n < gm.blocks.blockList.size(); n++) {
+                                if (gm.blocks.blockList.get(n).blockID.equals(gm.getCollisionValue(currentBlock - 1))) {
+                                    if (!gm.blocks.blockList.get(n).doesCollide) {
+                                        gm.setCollisionValue("grassblockleft", currentBlock);
+                                    }
                                 }
                             }
+                            if (gm.getCollisionValue(currentBlock) != "grassblockleft") {
+                                gm.setCollisionValue("grassblockright", currentBlock);
+                            }
                         }
-                        if(gm.getCollisionValue(currentBlock) != "grassblockleft") {
-                            gm.setCollisionValue("grassblockright", currentBlock);
-                        }
-                    }
 
-                    if(gm.getCollisionValue(currentBlock) == "dirtblock") {
-                        if(gm.getCollisionValue(currentBlock - 1).equals("grassblockright")) {
-                            gm.setCollisionValue("grassblock", currentBlock-1);
+                        if (gm.getCollisionValue(currentBlock) == "dirtblock") {
+                            if (gm.getCollisionValue(currentBlock - 1).equals("grassblockright")) {
+                                gm.setCollisionValue("grassblock", currentBlock - 1);
+                            }
                         }
-                    }
+                    }catch(Exception e) {}
+                    //endregion
+
+                    //region Snowy Ground
+                    try {
+                        if (gm.getCollisionFromID(gm.getCollisionValue(currentBlock)) && gm.getCollisionValue(currentBlock - 1).equals("snowy_ground_right")) {
+                            gm.setCollisionValue("snowy_ground", currentBlock - 1);
+                        }
+                        if (gm.getCollisionValue(currentBlock) == "snowy_ground") {
+                            for (int n = 0; n < gm.blocks.blockList.size(); n++) {
+                                if (gm.blocks.blockList.get(n).blockID.equals(gm.getCollisionValue(currentBlock - 1))) {
+                                    if (!gm.blocks.blockList.get(n).doesCollide) {
+                                        gm.setCollisionValue("snowy_ground_left", currentBlock);
+                                    }
+                                }
+                            }
+                            if (gm.getCollisionValue(currentBlock) != "snowy_ground_left") {
+                                gm.setCollisionValue("snowy_ground_right", currentBlock);
+                            }
+                        }
+
+                        if (gm.getCollisionValue(currentBlock) == "ground") {
+                            if (gm.getCollisionValue(currentBlock - 1).equals("snowy_ground_right")) {
+                                gm.setCollisionValue("snowy_ground", currentBlock - 1);
+                            }
+                        }
+                    }catch(Exception e) {}
                     //endregion
 
                     //Tree Generation
@@ -114,9 +142,11 @@ public class LevelLoader {
             }
 
         }catch(Exception e) {
+            e.printStackTrace();
+            System.exit(0);
             gm.player.setLocation(gm.spawnX, gm.spawnY);
-            gm.levelNumber--;
-            load(gm.levelNumber);
+            lm.decrementLevelNumber();
+            load(lm.getLevelNumber());
         }
     }
 
@@ -132,5 +162,8 @@ public class LevelLoader {
             case "snow":
                 lm.getLevelWeather().set(LevelWeather.SNOW);
         }
+
+        //lm.getLevelWeather().setWeatherIntensity(Integer.parseInt(levelP.get("weatherIntensity")));
+
     }
 }

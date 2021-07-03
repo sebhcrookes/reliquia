@@ -16,25 +16,28 @@ public class Physics {
     protected float offY = 0;
     protected float offX = 0;
 
+    protected float velX = 0;
+    protected float velY = 0;
+
     private GameObject obj;
 
     private boolean isInitialised = false;
 
     public Physics() {}
 
-    public void init(GameObject obj, int speed) {
+    public void physicsInit(GameObject obj, int speed) {
         this.speed = speed;
         this.obj = obj;
         this.isInitialised = true;
     }
 
-    public void apply(GameObject obj, GameManager gm, float dt) {
+    public void physicsApply(GameObject obj, GameManager gm, float dt) {
         if(!isInitialised) {
             return;
         }
 
         float MULTIPLIER = (float) (1.0 / 60.0);
-        fallDistance += MULTIPLIER * fallSpeed;
+        fallDistance += MULTIPLIER * fallSpeed; // Calculate fallDistance
 
         this.offY += fallDistance;
         if(obj.tag != "acid") { //We don't want to run a grounded check on the acid bottle
@@ -52,33 +55,29 @@ public class Physics {
             }
         }
 
-        //Water Physics
-        if(isUnderwater()) {
-            grounded = true;
-            fallSpeed = 0;
-        }
+        //TODO: Water Physics
 
-        //Final Position Calculation
-        //Y
-        if(offY > gm.TS / 2) {
+        // Final Position Calculation: Y
+        if(offY > GameManager.TS >> 1) {
             obj.tileY++;
-            offY -= gm.TS;
-        }else if(offY < -gm.TS / 2) {
+            offY -= GameManager.TS;
+        }else if(offY < -GameManager.TS >> 1) {
             obj.tileY--;
-            offY += gm.TS;
+            offY += GameManager.TS;
         }
 
-        //X
-        if(this.offX > gm.TS / 2) {
-            this.offX -= gm.TS;
+        // Final Position Calculation: X
+        if(this.offX > GameManager.TS >> 1) {
+            this.offX -= GameManager.TS;
             obj.tileX++;
-        }else if(this.offX < -gm.TS / 2) {
-            this.offX += gm.TS;
+        }else if(this.offX < -GameManager.TS >> 1) {
+            this.offX += GameManager.TS;
             obj.tileX--;
         }
 
-        obj.posX = obj.tileX * gm.TS + this.offX;
-        obj.posY = obj.tileY * gm.TS + this.offY;
+        // Apply the changes
+        obj.posX = obj.tileX * GameManager.TS + this.offX;
+        obj.posY = obj.tileY * GameManager.TS + this.offY;
     }
 
     public void setGrounded(boolean grounded) {

@@ -68,19 +68,20 @@ public class SaveFiles {
     }
 
     private Object[] getInventoryData() {
-        Object[] inventoryData = new Object[2];
+        Object[] inventoryData = new Object[3];
         inventoryData[0] = gm.inventory.items;
         inventoryData[1] = gm.inventory.itemCount;
+        inventoryData[2] = gm.inventory.getSelectedSlot();
         return inventoryData;
     }
 
     private Object[] getGameData() {
         Object[] gameData = new Object[1];
-        gameData[0] = this.gm.levelNumber;
+        gameData[0] = this.gm.lm.getLevelNumber();
         return gameData;
     }
 
-    private void createFolders() {
+    public void createFolders() {
         File mainDir = new File(".game.exe/");
         mainDir.mkdir();
     }

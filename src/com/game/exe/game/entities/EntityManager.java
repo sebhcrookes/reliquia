@@ -7,12 +7,12 @@ import com.game.exe.game.entities.npc.Beth;
 
 import java.io.Serializable;
 
-public class Entities implements Serializable {
+public class EntityManager implements Serializable {
 
     private GameManager gm;
     public Items im;
 
-    public Entities(GameManager gm) {
+    public EntityManager(GameManager gm) {
         this.gm = gm;
         im = new Items(gm);
     }

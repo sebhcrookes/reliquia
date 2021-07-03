@@ -34,13 +34,13 @@ public class Panda extends GameObject implements Serializable {
         this.setOffY(0);
 
         int speed = 100;
-        this.init(this, speed);
+        this.physicsInit(this, speed);
     }
 
     @Override
     public void update(GameContainer gc, GameManager gm, float dt) {
 
-        this.apply(this,gm, dt);
+        this.physicsApply(this,gm, dt);
 
         //Panda AI
         if(allowMove) { originalPosX = this.tileX; amountToMove = gm.random.generate(0,6) - 3; allowMove = false; }

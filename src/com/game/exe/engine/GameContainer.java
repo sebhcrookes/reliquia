@@ -30,7 +30,7 @@ public class GameContainer implements Runnable {
 
     public void start(GameManager gm) {
         window = new Window(this);
-        renderer = new Renderer(this, gm);
+        renderer = new Renderer(this);
         input = new Input(this);
 
         scale = settings.getScale();

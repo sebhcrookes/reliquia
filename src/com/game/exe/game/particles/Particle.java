@@ -10,25 +10,16 @@ import java.awt.*;
 
 public class Particle extends GameObject {
 
-    private float posX;
-    private float posY;
+    public float posX;
+    public float posY;
 
-    private int component;
+    private ParticleComponent[] component;
 
     private Image image;
     private int existenceTime;
     private int decayType;
 
-    public Particle(float posX, float posY, String imagePath, int existenceTime, int decayType, int fallSpeed) {
-        this.posX = posX;
-        this.posY = posY;
-        this.image = new Image(imagePath);
-        this.existenceTime = existenceTime;
-        this.decayType = decayType;
-        this.fallSpeed = fallSpeed;
-    }
-
-    public Particle(float posX, float posY, String imagePath, int existenceTime, int decayType, int fallSpeed, int component) {
+    public Particle(float posX, float posY, String imagePath, int existenceTime, int decayType, int fallSpeed, ParticleComponent[] component) {
         this.posX = posX;
         this.posY = posY;
         this.image = new Image(imagePath);
@@ -67,17 +58,8 @@ public class Particle extends GameObject {
                 break;
         }
 
-        switch(component) {
-            case ParticleManager.WIND_LIGHT:
-                if(gm.random.generate(1,4) == 2)
-                    posX--;
-                return;
-            case ParticleManager.WIND_MEDIUM:
-                posX--;
-                return;
-            case ParticleManager.WIND_STRONG:
-                posX-=2;
-                return;
+        for(int i = 0; i < component.length; i++) {
+            component[i].update(this, gc, gm, dt);
         }
     }
 

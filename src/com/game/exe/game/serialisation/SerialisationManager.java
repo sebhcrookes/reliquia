@@ -32,4 +32,6 @@ public class SerialisationManager {
     public String getSaveEnding() {
         return this.saveEnding;
     }
+
+    public void createFolders() { sf.createFolders(); }
 }
