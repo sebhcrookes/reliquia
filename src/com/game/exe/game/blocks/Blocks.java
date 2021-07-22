@@ -10,12 +10,14 @@ public class Blocks implements Serializable {
     public Blocks(){}
 
     public void initialise() {
-        blockList.add(new Block("/assets/blocks/air.png", "air", 0xffffffff, 0, false));
-        blockList.add(new Block("/assets/blocks/grass/grass.png", "grassblock", 0xff00ff00, 1, true));
-        blockList.add(new Block("/assets/blocks/mud.png", "mudblock", 0xff894239, 1, true));
-        blockList.add(new BlockVariant("/assets/blocks/grass/grassleft.png", "grassblockleft", 1, true));
-        blockList.add(new BlockVariant("/assets/blocks/grass/grassright.png", "grassblockright", 1, true));
-        blockList.add(new Block("/assets/blocks/grass/dirt.png", "dirtblock", 0xffb97a56, 2, true));
+        blockList.add(new Block("/assets/blocks/air.png", "air", 0xffffffff, 0.0, false));
+
+        blockList.add(new Block("/assets/blocks/grass/grass.png", "grass_block", 0xff00ff00, 1.0, true));
+        blockList.add(new BlockVariant("/assets/blocks/grass/grassleft.png", "grass_left", 1.1, true));
+        blockList.add(new BlockVariant("/assets/blocks/grass/grassright.png", "grass_right", 1.2, true));
+        blockList.add(new Block("/assets/blocks/mud.png", "mud_block", 0xff894239, 1.3, true));
+
+        blockList.add(new Block("/assets/blocks/grass/dirt.png", "dirt_block", 0xffb97a56, 2.0, true));
 
         blockList.add(new Block("/assets/blocks/environment/tallgrass.png", "tallgrassblock", 0xff0ed145, 3, false));
         blockList.add(new Block("/assets/blocks/environment/tulip.png", "flowerblock", 0xffec1c24, 4, false));
@@ -39,9 +41,11 @@ public class Blocks implements Serializable {
         blockList.add(new BlockVariant("/assets/blocks/mountainous/snowy_ground_left.png", "snowy_ground_left", 17, true));
         blockList.add(new BlockVariant("/assets/blocks/mountainous/snowy_ground_right.png", "snowy_ground_right", 17, true));
         blockList.add(new Block("/assets/blocks/mountainous/ground.png", "ground", 0xff615954,18, true));
+    }
 
-
-
-
+    public int getGenericType(double type) {
+        String string_temp = Double.toString(type);
+        String string_form = string_temp.substring(0,string_temp.indexOf('.'));
+        return Integer.parseInt(string_form);
     }
 }

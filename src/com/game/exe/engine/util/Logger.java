@@ -2,6 +2,8 @@ package com.game.exe.engine.util;
 
 public class Logger {
 
+    private static String title = "";
+
     private static String log = "";
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -18,10 +20,22 @@ public class Logger {
     public static final int ERROR = 1;
     public static final int FATAL_ERROR = 2;
 
-    private static final String INFO_TEXT = "<game.exe>: Info - ";
-    private static final String ERROR_TEXT = "<game.exe>: Error - ";
-    private static final String FATAL_ERROR_TEXT = "<game.exe>: Fatal Error - ";
+    private static String INFO_TEXT;
+    private static String ERROR_TEXT;
+    private static  String FATAL_ERROR_TEXT;
 
+    public void init(String gameTitle) {
+        title = gameTitle;
+        INFO_TEXT = "<" + title + ">: Info - ";
+        ERROR_TEXT = "<" + title + ">: Error - ";
+        FATAL_ERROR_TEXT = "<" + title + ">: Error - ";
+    }
+
+    /**
+     * Prints a message to the console
+     * @param type Message Type (INFO, ERROR, FATAL_ERROR)
+     * @param message Message to log
+     */
     public static void log(int type, String message) {
         switch(type) {
             case INFO:
@@ -36,6 +50,9 @@ public class Logger {
                 log += "\n" + FATAL_ERROR_TEXT + message;
                 System.out.println(ANSI_RED + FATAL_ERROR_TEXT + ANSI_RESET + message);
                 return;
+            default:
+                log += "\n" + INFO_TEXT + message;
+                System.out.println(ANSI_GREEN + INFO_TEXT + ANSI_RESET + message);
         }
     }
 }

@@ -40,6 +40,6 @@ public class Controls implements Serializable {
         if (gc.getInput().isButtonDown(mainClick))
             varRadius = 1;
         if (varRadius != 0)
-            r.drawCircle((int) (gc.getInput().getMouseX() + gm.camera.getOffX()), (int) (gc.getInput().getMouseY() + gm.camera.getOffY()), varRadius, 0xffffffff);
+            r.drawCircle((int) (gc.getInput().getMouseX() + gm.camera.getOffX()) - varRadius, (int) (gc.getInput().getMouseY() + gm.camera.getOffY()) - varRadius, varRadius, 0xffffffff);
     }
 }

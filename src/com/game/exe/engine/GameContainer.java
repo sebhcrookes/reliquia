@@ -1,12 +1,8 @@
 package com.game.exe.engine;
 
-import com.game.engine.engine.util.EngineSettings;
+import com.game.exe.engine.util.EngineSettings;
 import com.game.exe.engine.util.Logger;
 import com.game.exe.engine.util.State;
-import com.game.exe.engine.Game;
-import com.game.exe.engine.Input;
-import com.game.exe.engine.Renderer;
-import com.game.exe.engine.Window;
 
 public class GameContainer implements Runnable {
 
@@ -18,7 +14,7 @@ public class GameContainer implements Runnable {
     private EngineSettings settings;
     private Logger logger = new Logger();
 
-    public int clearColour = 0xFF000000;
+    public int clearColour = 0xff92f4ff;
 
     private boolean running = false;
     public int fps = 0;
@@ -32,7 +28,7 @@ public class GameContainer implements Runnable {
         window = new Window(this);
         renderer = new Renderer(this);
         input = new Input(this);
-        //logger.init(settings.getTitle());
+        logger.init(settings.getTitle());
 
         thread = new Thread(this);
         thread.start();

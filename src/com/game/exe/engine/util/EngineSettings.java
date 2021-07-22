@@ -1,4 +1,4 @@
-package com.game.engine.engine.util;
+package com.game.exe.engine.util;
 
 public class EngineSettings {
 
@@ -6,7 +6,7 @@ public class EngineSettings {
      * EngineSettings class allows for simple modification to engine-related settings
      */
 
-    private String title = "game.engine";
+    private String title = "game.exe";
     private int width = 512;
     private int height = 288;
     private float scale = 2.0f;

@@ -1,6 +1,6 @@
 package com.game.exe.game;
 
-import com.game.engine.engine.util.EngineSettings;
+import com.game.exe.engine.util.EngineSettings;
 import com.game.exe.engine.Game;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;

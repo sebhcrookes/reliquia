@@ -2,12 +2,13 @@ package com.game.exe.game.blocks;
 
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
+import com.game.exe.engine.gfx.Light;
 import com.game.exe.game.GameState;
 import com.game.exe.engine.gfx.Image;
 
 public class BlockVariant extends AbstractBlock {
 
-    public BlockVariant(String pathToImage, String blockID, int relativeNumber, boolean doesCollide) {
+    public BlockVariant(String pathToImage, String blockID, double relativeNumber, boolean doesCollide) {
         this.sprite = new Image(pathToImage);
         this.blockID = blockID;
         this.colourCode = 0;

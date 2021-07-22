@@ -3,6 +3,7 @@ package com.game.exe.game.entities;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
 import com.game.exe.engine.gfx.Image;
+import com.game.exe.engine.gfx.Light;
 import com.game.exe.engine.position.Vector2;
 import com.game.exe.game.GameState;
 import com.game.exe.game.Sound;
@@ -219,7 +220,6 @@ public class Player extends GameObject {
     @Override
     public void render(GameContainer gc, Renderer r) {
         r.drawImage(playerImage, (int) this.position.getPosX(), (int) this.position.getPosY());
-        //r.drawLine((int)(mouseTileX),(int)(mouseTileY),(int)this.posX,(int)this.posY,0xffffffff);
     }
 
     public void setLocation(int posX, int posY) {

@@ -1,6 +1,5 @@
 package com.game.exe.game;
 
-import com.game.exe.engine.AbstractGame;
 import com.game.exe.engine.GameContainer;
 import com.game.exe.engine.Renderer;
 import com.game.exe.engine.util.State;
@@ -14,10 +13,7 @@ import com.game.exe.game.particles.ParticleManager;
 import com.game.exe.game.serialisation.SerialisationManager;
 import com.game.exe.game.ui.UIManager;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GameState extends State {
@@ -199,7 +195,7 @@ public class GameState extends State {
         int blockToTest = x + y * lm.getLevelW();
         if (collision[blockToTest] != getBlockIDFromNumber(0)) {
             for (int i = 0; i < blocks.blockList.size(); i++) {
-                if (blocks.blockList.get(i).blockID == collision[blockToTest]) {
+                if (blocks.blockList.get(i).blockID.equals(collision[blockToTest])) {
                     return blocks.blockList.get(i).doesCollide;
                 }
             }
@@ -211,7 +207,7 @@ public class GameState extends State {
         if (x < 0 || x >= lm.getLevelW() || y < 0 || y >= lm.getLevelH())
             return false;
         int blockToTest = x + y * lm.getLevelW();
-        if (collision[blockToTest] != getBlockIDFromNumber(0)) {
+        if (collision[blockToTest] != getBlockIDFromNumber(0.0)) {
             for (int i = 0; i < blocks.blockList.size(); i++) {
                 if (blocks.blockList.get(i).blockID == collision[blockToTest]) {
                     return blocks.blockList.get(i).doesCollide;
@@ -224,7 +220,7 @@ public class GameState extends State {
     public String getCollisionDetails(int x, int y) {
         int blockToTest = x + y * lm.getLevelW();
         try {
-            if (collision[blockToTest] != getBlockIDFromNumber(0)) {
+            if (collision[blockToTest] != getBlockIDFromNumber(0.0)) {
                 return collision[blockToTest];
             }
         } catch(ArrayIndexOutOfBoundsException e) {}
@@ -244,7 +240,7 @@ public class GameState extends State {
         }
     }
 
-    public String getBlockIDFromNumber(int relativeNumber) {
+    public String getBlockIDFromNumber(double relativeNumber) {
         for(int i = 0; i < blocks.blockList.size(); i++) {
             if(blocks.blockList.get(i).relativeNumber == relativeNumber) {
                 return blocks.blockList.get(i).blockID;
@@ -253,7 +249,7 @@ public class GameState extends State {
         return null;
     }
 
-    public int getBlockNumberFromID(String ID) {
+    public double getBlockNumberFromID(String ID) {
         for(int i = 0; i < blocks.blockList.size(); i++) {
             if(blocks.blockList.get(i).blockID == ID) {
                 return blocks.blockList.get(i).relativeNumber;

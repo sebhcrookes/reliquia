@@ -24,10 +24,6 @@ public class UI implements Serializable{
 
     private GameState gm;
 
-    private int titleMaxY;
-    private int menuY = 0;
-    private int menuX;
-
     private boolean isChat = false;
     private String chatTyped = "";
 
@@ -43,10 +39,8 @@ public class UI implements Serializable{
 
     public void init(GameState gm, GameContainer gc) { if(initHasRun) { return; } else { initHasRun = true; }
         playerImage = new Image("/assets/player/" + gm.player.colour + "/0.png");
-        titleMaxY = (gc.getHeight() / 2) - (gm.sprite.titleImage.getHeight() / 2);
-        menuX = (gc.getWidth() / 2) - (gm.sprite.titleImage.getWidth() / 2);
 
-        playerMaxY = (titleMaxY - (gm.sprite.titleImage.getHeight() / 2)) - playerImage.getHeight() / 2;
+        //playerMaxY = (titleMaxY - (gm.sprite.titleImage.getHeight() / 2)) - playerImage.getHeight() / 2;
         menuPlayerX = (gc.getWidth() / 2) - (playerImage.getWidth() / 2);
     }
 
@@ -58,17 +52,6 @@ public class UI implements Serializable{
         }catch(Exception e) {}
 
 
-        //Menu
-        if(allowMove) { menuY += 3; menuPlayerY += 3; }
-        if(gc.getInput().isKeyDown(KeyEvent.VK_ESCAPE) && !menu) {
-            menu = true;
-            menuY = 0;
-            menuPlayerY = 0;
-        }
-        if(gc.getInput().isKeyDown(KeyEvent.VK_ENTER) && menu) {
-            menu = false;
-        }
-
         //Change Colour
         //if(gc.getInput().isKeyDown(KeyEvent.VK_1) && menu) { gm.player.setColour("green"); updateMenuPlayer(gm); }
         //if(gc.getInput().isKeyDown(KeyEvent.VK_2) && menu) { gm.player.setColour("cyan"); updateMenuPlayer(gm); }
@@ -78,7 +61,7 @@ public class UI implements Serializable{
         //Toggle Debug Info
         if(gc.getInput().isKey(KeyEvent.VK_CONTROL)) {
             if(gc.getInput().isKeyDown(KeyEvent.VK_SHIFT)) {
-                if(debugDisplay == true)
+                if(debugDisplay)
                     debugDisplay = false;
                 else
                     debugDisplay = true;
@@ -122,32 +105,6 @@ public class UI implements Serializable{
                 r.drawText(lines[i], 0, (i * r.font.getHeight()), 0xffffffff);
             }
         }
-
-        if(menu) {
-            try {
-                if (menuY >= titleMaxY) {
-                    menuY = titleMaxY;
-                }
-                if (menuPlayerY >= playerMaxY) {
-                    menuPlayerY = playerMaxY;
-                }
-
-                r.drawImage(playerImage, menuPlayerX, menuPlayerY);
-                r.drawImage(gm.sprite.titleImage, menuX, menuY);
-                allowMove = true;
-            } catch(Exception e) {}
-        }
-        if(!menu) {
-            if(menuY < gc.getHeight()) {
-                r.drawImage(playerImage, menuPlayerX, menuPlayerY);
-                r.drawImage(gm.sprite.titleImage, menuX, menuY);
-                allowMove = true;
-            }else
-                allowMove = false;
-        }
-        try {
-            gm.inventory.render(r, gc);
-        }catch(Exception e) {}
 
 
     }

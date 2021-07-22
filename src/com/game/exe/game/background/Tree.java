@@ -9,7 +9,7 @@ import com.game.exe.engine.gfx.Image;
 
 public class Tree extends GameObject {
 
-    private Image treeImage = new Image("/assets/blocks/environment/tree/temp.png");
+    private Image treeImage = new Image("/assets/blocks/environment/tree/tree.png");
 
     public Tree(int posX, int posY) {
         this.tag = "tree";

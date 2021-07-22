@@ -11,7 +11,7 @@ public abstract class AbstractBlock extends GameObject {
     public Image sprite;
     public String blockID;
     public int colourCode;
-    public int relativeNumber;
+    public double relativeNumber;
     public boolean doesCollide;
 
     @Override

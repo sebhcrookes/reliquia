@@ -3,7 +3,7 @@ package com.game.exe.game.entities;
 public class Health {
 
     private GameObject obj;
-    private int health = 4;
+    private int health = 10;
 
     public Health() {}
 

@@ -74,15 +74,15 @@ public class Panda extends GameObject implements Serializable {
     }
 
     private void setImage(String type) {
-        if(this.type == type) {
+        if(this.type.equals(type)) {
             return;
         }
         this.type = type;
-        if(type == "right") {
+        if(type.equals("right")) {
             pandaImage = new Image("/assets/panda/right.png");
             return;
         }
-        if(type == "left") {
+        if(type.equals("left")) {
             pandaImage = new Image("/assets/panda/left.png");
         }
 

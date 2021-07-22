@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class GUIButton extends GUIObject {
 
-    private int width, height;
+    public int width, height;
     private String text = "";
 
     private int borderColour = 0xFFFFFFFF;

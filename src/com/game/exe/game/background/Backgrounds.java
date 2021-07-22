@@ -7,7 +7,7 @@ import com.game.exe.engine.gfx.Image;
 
 public class Backgrounds {
 
-    public Image tree = new Image("/assets/blocks/environment/tree/temp.png");
+    public Image tree = new Image("/assets/blocks/environment/tree/tree.png");
 
     private Tree[] trees = new Tree[100];
     private int treeCount = 0;

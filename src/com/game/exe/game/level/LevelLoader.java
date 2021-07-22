@@ -69,25 +69,25 @@ public class LevelLoader {
 
                     //region Grass Block
                     try {
-                        if (gm.getCollisionFromID(gm.getCollisionValue(currentBlock)) && gm.getCollisionValue(currentBlock - 1).equals("grassblockright")) {
-                            gm.setCollisionValue("grassblock", currentBlock - 1);
+                        if (gm.getCollisionFromID(gm.getCollisionValue(currentBlock)) && gm.getCollisionValue(currentBlock - 1).equals("grass_right")) {
+                            gm.setCollisionValue("grass_block", currentBlock - 1);
                         }
-                        if (gm.getCollisionValue(currentBlock) == "grassblock") {
+                        if (gm.getCollisionValue(currentBlock) == "grass_block") {
                             for (int n = 0; n < gm.blocks.blockList.size(); n++) {
                                 if (gm.blocks.blockList.get(n).blockID.equals(gm.getCollisionValue(currentBlock - 1))) {
                                     if (!gm.blocks.blockList.get(n).doesCollide) {
-                                        gm.setCollisionValue("grassblockleft", currentBlock);
+                                        gm.setCollisionValue("grass_left", currentBlock);
                                     }
                                 }
                             }
-                            if (gm.getCollisionValue(currentBlock) != "grassblockleft") {
-                                gm.setCollisionValue("grassblockright", currentBlock);
+                            if (gm.getCollisionValue(currentBlock) != "grass_left") {
+                                gm.setCollisionValue("grass_right", currentBlock);
                             }
                         }
 
                         if (gm.getCollisionValue(currentBlock) == "dirtblock") {
-                            if (gm.getCollisionValue(currentBlock - 1).equals("grassblockright")) {
-                                gm.setCollisionValue("grassblock", currentBlock - 1);
+                            if (gm.getCollisionValue(currentBlock - 1).equals("grass_right")) {
+                                gm.setCollisionValue("grass_block", currentBlock - 1);
                             }
                         }
                     }catch(Exception e) {}
@@ -120,13 +120,13 @@ public class LevelLoader {
                     //endregion
 
                     //Tree Generation
-                    if(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock)) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - levelW))) {
-                        if(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-1)) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 1)))) {
-                            if(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-2)) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 2)))) {
-                                if(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-3)) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 3)))) {
-                                    if(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-4)) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 4)))) {
-                                        if(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-5)) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 5)))) {
-                                            if(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-6)) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 6)))) {
+                    if(gm.blocks.getGenericType(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock))) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - levelW))) {
+                        if(gm.blocks.getGenericType(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-1))) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 1)))) {
+                            if(gm.blocks.getGenericType(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-2))) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 2)))) {
+                                if(gm.blocks.getGenericType(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-3))) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 3)))) {
+                                    if(gm.blocks.getGenericType(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-4))) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 4)))) {
+                                        if(gm.blocks.getGenericType(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-5))) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 5)))) {
+                                            if(gm.blocks.getGenericType(gm.getBlockNumberFromID(gm.getCollisionValue(currentBlock-6))) == 1 && !gm.getCollisionFromID(gm.getCollisionValue(currentBlock - (levelW - 6)))) {
                                                 if(treeCount < 2) {
                                                     gm.backgrounds.createTree(x - 6, y);
                                                     treeCount++;
