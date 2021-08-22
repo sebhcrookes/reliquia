@@ -1,9 +1,9 @@
-package com.game.exe.engine;
+package com.game.engine.engine;
 
 /**
- * The engine used for game.exe.
+ * game.engine
  * Renderer, window, input, and other engine-related things
- * are all managed here.
+ * are all here.
  *
  * @author BambooPyanda
  */

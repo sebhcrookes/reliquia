@@ -1,4 +1,4 @@
-package com.game.exe.engine.audio;
+package com.game.engine.engine.audio;
 
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
@@ -9,6 +9,7 @@ public class SoundClip {
     private Clip clip;
     private FloatControl gainControl;
 
+    @Deprecated
     public SoundClip(String path) {
         try {
             InputStream audioSrc = SoundClip.class.getResourceAsStream(path);
@@ -22,29 +23,33 @@ public class SoundClip {
                     baseFormat.getChannels() * 2,
                     baseFormat.getSampleRate(),
                     false
-                    );
+            );
 
             AudioInputStream dais = AudioSystem.getAudioInputStream(decodeFormat, ais);
 
             clip = AudioSystem.getClip();
             clip.open(dais);
-            gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
 
-        }catch(Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void play() {
-        try {
-            if (clip == null) {
-                return;
+        new Thread(() -> {
+            try {
+                if (clip == null) {
+                    return;
+                }
+                stop();
+                clip.setFramePosition(0);
+                while (!clip.isRunning()) {
+                    clip.start();
+                }
+            } catch (Exception e) {
             }
-            stop();
-            clip.setFramePosition(0);
-            while (!clip.isRunning()) {
-                clip.start();
-            }
-        }catch(Exception e) {}
+        }).start();
 
     }
 
@@ -53,7 +58,8 @@ public class SoundClip {
             if (clip.isRunning()) {
                 clip.stop();
             }
-        }catch(Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void close() {
@@ -61,26 +67,23 @@ public class SoundClip {
             stop();
             clip.drain();
             clip.close();
-        }catch(Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void loop() {
         try {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
             play();
-        }catch(Exception e) {}
-    }
-
-    public void setVolume(float value) {
-        try {
-            gainControl.setValue(value);
-        }catch(Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public boolean isRunning() {
         try {
             return clip.isRunning();
-        }catch(Exception e) {}
+        } catch (Exception e) {
+        }
         return false;
     }
 
