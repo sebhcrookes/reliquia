@@ -2,7 +2,7 @@
   <artifact type="jar" name="game.exe:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/game_exe_jar</output-path>
     <root id="archive" name="game.exe.jar">
-      <element id="module-output" name="game.exe" />
+      <element id="module-output" name="Reliquia" />
     </root>
   </artifact>
 </component>

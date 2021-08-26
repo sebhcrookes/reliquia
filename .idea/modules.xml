@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/game.exe.iml" filepath="$PROJECT_DIR$/game.exe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Reliquia.iml" filepath="$PROJECT_DIR$/Reliquia.iml" />
     </modules>
   </component>
 </project>
