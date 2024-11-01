@@ -24,7 +24,7 @@ public class CampLevel extends Level {
         gs.getObjectManager().addObject(new BambooSword(15, 24));
 
         String[] npcConversation = new String[] {
-                "Welcome to Heiholmeia!",
+                "Welcome!",
                 "Take this book, you'll need it on your travels"
         };
 

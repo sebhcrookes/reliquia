@@ -9,6 +9,7 @@ import com.game.reliquia.game.entities.player.Player;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
 
 public class LoadManager {
@@ -28,7 +29,11 @@ public class LoadManager {
             Console.println("<green>LoadManager - <reset>Loaded game successfully");
 
             return saveData;
-        }catch(Exception e) { Console.println("<orange>LoadManager - <reset>Failed to load game"); }
+        } catch(FileNotFoundException e) {
+            Console.println("<orange>LoadManager - <reset>File not found, creating new game save");
+        } catch(Exception e) {
+            Console.println("<orange>LoadManager - <reset>Failed to load game");
+        }
 
         return null;
     }

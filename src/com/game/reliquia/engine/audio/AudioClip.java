@@ -6,7 +6,10 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AudioClip {
 
@@ -23,8 +26,9 @@ public class AudioClip {
 
         try {
             clip = AudioSystem.getClip();
-            inputStream = AudioSystem.getAudioInputStream(
-                    GameEngine.class.getResourceAsStream(path));
+            InputStream audioSrc = AudioClip.class.getResourceAsStream(path);
+            InputStream bufferedStream =  new BufferedInputStream(audioSrc);
+            inputStream = AudioSystem.getAudioInputStream(bufferedStream);
             clip.open(inputStream);
             setVolume(0.0F);
             clip.setMicrosecondPosition(clip.getMicrosecondLength());
@@ -39,7 +43,7 @@ public class AudioClip {
 
     public static void addSound(String name, String path, float volume) {
         clips.add(new AudioClip(name, path));
-        getSound(name).setVolume(volume);
+        Objects.requireNonNull(getSound(name)).setVolume(volume);
     }
 
     public static AudioClip getSound(String name) {

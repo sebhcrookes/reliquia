@@ -6,10 +6,10 @@ public class EngineSettings {
      * EngineSettings class allows for simple modification to engine-related settings
      */
 
-    private String title = "game.exe";
+    private String title = "Reliquia";
     private int width = 512;
     private int height = 288;
-    private float scale = 2.0f;
+    private float scale = 3.0f;
 
     private double updateCap = 1.0 / 60.0;
     private boolean debug = false;
